@@ -6,9 +6,37 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <link rel="stylesheet" href="./dist/main.css" />
     <title>LexiMoog</title>
+    <script src="./dist/main.js" defer></script>
   </head>
-
   <body>
-    <script src="./dist/main.js"></script>
+    <header>
+      <h1>LexiLoop</h1>
+      <nav>
+        <div class="about-hover">
+          <h3>About</h3>
+          <p class="about-dropdown"></p>
+        </div>
+      </nav>
+    </header>
+    <main>
+      <form>
+        <label for="words">
+          <input type="text">
+        </label>
+      </form>
+      <section>
+        <header>
+          <button id="play-btn"></button>
+          <label for="tempo">
+            <input type="range" name="tempo" id="tempo">
+          </label>
+        </header>
+        <main id="track-wrapper">
+
+        </main>
+      </section>
+
+    </main>
+
   </body>
 </html>
