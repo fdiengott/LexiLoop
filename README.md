@@ -50,9 +50,12 @@ webpack.dev.js
 webpack.prod.js
 
 ## Architecture and technology
-- web speech api 
-- web audio api
-- a dictionary API (unsure which one)
+- Scss
+- HTML
+- Javascript
+- Js web speech api 
+- Js web audio api
+- MERRIAM-WEBSTER'S COLLEGIATE® DICTIONARY WITH AUDIO API 
 
 ## Implementation timeline
 - Research APIs ~ 0.5 days
