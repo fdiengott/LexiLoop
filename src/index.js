@@ -2,9 +2,9 @@ require("babel-core/register");
 require("babel-polyfill");
 import './styles/index.scss'; 
 
-import { getWordAudio, getWordSyllables } from './scripts/dictionary'; 
+import { getWordAudio, getWordSyllables, syllableToIpa, getWordIPA } from './scripts/dictionary'; 
 import { setupTracks } from './scripts/track';
-import { playWord, playIPA } from './scripts/audio'; 
+import { playWord, playIPA, loadSyllableSound } from './scripts/audio'; 
 
 const currentStateObj = {
   currentInput: null,
@@ -20,11 +20,24 @@ async function handleInput(e) {
   resetTracks(); 
   
   const inputText = e.currentTarget.firstElementChild.firstElementChild.value; 
-  const syllables = await getWordSyllables(inputText); 
+  // const ipa = await getWordIPA(inputText); 
+  
+  // const syllables = await getWordSyllables(inputText); 
+  debugger
+  
+  // FOR TESTING
+  const audio = loadSyllableSound('hel'); 
+  // const audio = loadSyllableSound(syllables[0]); 
+
+  debugger
+  // const ipaSyllables = syllables.map(syl => syllableToIpa(syl) );
+  // console.log(ipaSyllables);
+
+
   // playWord(inputText); 
 
   // setupTracks(syllables, document.getElementById('track-wrapper')); 
-  playIPA(syllables[0]); 
+  // playIPA(syllables[0]); 
 
 }
 

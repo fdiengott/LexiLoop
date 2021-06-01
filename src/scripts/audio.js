@@ -38,12 +38,29 @@ export const playIPA = (ipa) => {
   
   meSpeak.loadVoice('en/en-us');
   meSpeak.speak(ipa); 
-  // meSpeak.speak('hello world'); 
-
+  
   // const spoken = meSpeak.speak('[['+ipa+']]', { 'rawdata': 'mime' });
   // if (spoken == null) {
   //   alert("An error occurred: speaking failed.");
   // }
 
   // meSpeak.play(spoken);
+}
+export const loadSyllableSound = async (syllable) => {
+  debugger
+
+  
+  meSpeak.loadVoice('en/en-us');
+  let audio; 
+
+  const data = await meSpeak.speak(syllable, {rawdata: true}, (success, id, stream) => {
+    console.log('in speak callback');
+    debugger
+    if (success) {
+      audio = stream; 
+    }
+  });
+
+  debugger
+  return audio; 
 }
