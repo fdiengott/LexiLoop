@@ -4,3 +4,4 @@ skeleton_README.md
 .env
 keys.js
 dist/vendor/phoneme-synthesis
+dist/vendor/
