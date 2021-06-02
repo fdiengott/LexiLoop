@@ -46,21 +46,35 @@ export const playIPA = (ipa) => {
 
   // meSpeak.play(spoken);
 }
-export const loadSyllableSound = async (syllable) => {
-  debugger
-
-  
-  meSpeak.loadVoice('en/en-us');
-  let audio; 
-
-  const data = await meSpeak.speak(syllable, {rawdata: true}, (success, id, stream) => {
-    console.log('in speak callback');
-    debugger
-    if (success) {
-      audio = stream; 
-    }
+export async function loadSyllableSound(syllable, audioContext) {
+  meSpeak.loadVoice('en/en-us', async () => {
+    await meSpeak.speak(syllable, {rawdata: true}, async (success, id, stream) => {
+      if (success) {
+        return await getAudioBuffer(stream, audioContext); 
+      }
+    });  
   });
+}
 
-  debugger
-  return audio; 
+function getAudioBuffer(data, audioContext) {
+  return audioContext.decodeAudioData(data); 
+}
+
+
+
+export const handleClick = (e) => {
+  console.log("you're in the handleClick method");
+
+  // turns some boolean to true so the node can be played
+  debugger // what is e? 
+}
+
+export const play = () => {
+
+
+  const audioSource = ctx.createBufferSource();
+  audioSource.connect( ctx.destination );
+
+  audioSource.buffer = //audio buffer
+  audioSource.start(); 
 }
