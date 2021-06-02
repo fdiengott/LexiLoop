@@ -4,32 +4,18 @@ import './styles/index.scss';
 
 import { getWordAudio, getWordSyllables, syllableToIpa, getWordIPA } from './scripts/dictionary'; 
 import { setupTracks, removeTracks } from './scripts/track';
-import { playWord, playIPA, loadSyllableSound, playSyllable, currentStateObj } from './scripts/audio'; 
+import { playWord, playIPA, loadSyllableSound, playSyllable, currentStateObj, scheduler } from './scripts/audio'; 
 
 
 currentStateObj.currentInput = null; 
-
-// {
-//   currentInput: null,
-//   audioContext: null, 
-//   isPlaying: false, 
-//   startTime: null, 
-//   current16thNote: null,     // last note that was scheduled to be played
-//   tempo: 50.0,              // measured in bpm
-//   lookAhead: 25.0,          // how frequently to call the scheduling function
-//   scheduleAheadTime: 0.1,   // how far ahead to schedule notes
-//   nextNoteTime: 0, 
-//   currentNote: 0, 
-//   syllableSamples: {},
-//   numSyllables: 0, 
-//   // currentEventListeners: [],
-// };
 
 document.addEventListener("DOMContentLoaded", init); 
 
 
 // should maybe change this to a debouncing function that fires after a certain amount of time elapses without typing
 document.querySelector("#input-text-form").addEventListener("submit", handleInput);
+const playBtn = document.querySelector('#play-btn'); 
+playBtn.setAttribute("disabled", "disabled"); 
 
 
 // GLOBAL CONTROLS
@@ -62,30 +48,84 @@ async function handleInput(e) {
   // INITIALIZE AUDIO_CONTEXT
   const ctx = new AudioContext(); 
   
-
-  // FOR TESTING
-  // const audio = await loadSyllableSound('hel', ctx); 
-  // await loadSyllableSound('hel', ctx).then( res => {
-  //   debugger
-  //   currentStateObj.syllableSamples[0] = res
-  // }); 
-  // currentStateObj.syllableSamples[0] = audio;  
-
-  
+  // LOAD ALL OF THE SYLLABLE SOUNDS
   for (let i = 0; i < syllables.length; i++) {
     loadSyllableSound(syllables[i], ctx, i); 
   }
 }
 
+export const start = () => {
+  const playBtn = document.querySelector('#play-btn');
+  let isPlaying = false;
+  const syllableSamples = Object.values(currentStateObj.syllableSamples); 
+  // debugger
 
-function startDOM() {
+  // if there are audio files and they are not promises
+  if (syllableSamples.length == currentStateObj.numSyllables && 
+    syllableSamples.every( sample => typeof sample !== 'Promise')) {
+    playBtn.removeAttribute("disabled"); 
+    playBtn.addEventListener("click", (e) => {
+      isPlaying = !isPlaying
+
+      // start playing
+      if (isPlaying) { 
+
+        if ( currentStateObj.audioContext.state === 'suspended') {
+          currentStateObj.audioContext.resume();
+        }
+
+        playBtn.innerHTML = "&#9208;"
+        currentStateObj.currentNote = 0;
+        currentStateObj.nextNoteTime = currentStateObj.audioContext.currentTime;
+        scheduler(); // kick off scheduling
+        requestAnimationFrame(draw); // start the drawing loop.
+        debugger
+        e.currentTarget.dataset.playing = 'true';
+        
+      } else {
+        // stop playing 
+        playBtn.innerHTML = "&#9658;"
+        window.clearTimeout(currentStateObj.timerID);
+        e.currentTarget.dataset.playing = 'false';
+      }
+    })
+  }
+
 }
 
-function unregisterEventListeners() { 
+// https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API/Advanced_techniques
+function draw() {
+  let drawNote = currentStateObj.lastNoteDrawn;
+  let currentTime = currentStateObj.audioContext.currentTime;
+  let noteQueue = currentStateObj.noteQueue; 
+  debugger
+
+  while (noteQueue.length && noteQueue[0].time < currentTime) {
+      drawNote = currentStateObj.noteQueue[0].note;
+      currentStateObj.noteQueue.splice(0,1);   // remove note from queue
+  }
+
+  // We only need to draw if the note has moved.
+  if (currentStateObj.lastNoteDrawn != drawNote) {
+    const tracks = document.querySelectorAll('.track'); 
+    tracks.forEach( track => {
+      debugger
+      track.children[currentStateObj.lastNoteDrawn].style.boxShadow = '0 0 8px rgba(0, 0, 0, 1)';
+      track.children[drawNote].style.boxShadow = '0 0 8px rgba(137, 255, 82, 1)';
+    });
+
+    currentStateObj.lastNoteDrawn = drawNote;
+  }
+  
+  requestAnimationFrame(draw);
 }
 
 function resetTracks() {
-  console.log("in reset tracks");
+  const tracks = document.querySelectorAll('.track'); 
+  while (tracks.firstChild) {
+    tracks.removeChild(tracks.firstChild)
+  }
+
 
   // should remove all event listeners and trigger a remove all tracks
 

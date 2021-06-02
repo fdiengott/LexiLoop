@@ -1,11 +1,11 @@
-
+import { start } from '../index'; 
 
 export const currentStateObj = {
   audioContext: null, 
   isPlaying: false, 
   startTime: null, 
   current16thNote: null,     // last note that was scheduled to be played
-  tempo: 50.0,              // measured in bpm
+  tempo: 80.0,              // measured in bpm
   lookAhead: 25.0,          // how frequently to call the scheduling function
   scheduleAheadTime: 0.1,   // how far ahead to schedule notes
   timeToNextNote: 0, 
@@ -13,6 +13,8 @@ export const currentStateObj = {
   syllableSamples: {},
   numSyllables: 0, 
   noteQueue: [],
+  timerID: null, 
+  lastNoteDrawn: 7,         // one less than the total number of beats
   // currentEventListeners: [],
 };
 
@@ -35,11 +37,12 @@ export async function loadSyllableSound(syllable, audioContext, trackIdx) {
   let audio; 
 
   await meSpeak.speak(syllable, {rawdata: true}, async (success, id, stream) => {
+    // debugger
     if (success) {
-      debugger
       audio = await getAudioBuffer(stream, audioContext); 
       currentStateObj.syllableSamples[trackIdx] = audio; 
     }
+    start(); 
   });  
 }
 function getAudioBuffer(data, audioContext) {
@@ -67,7 +70,7 @@ export const playSyllable = (audioBuffer, time) => {
   return audioSource; 
 }
 
-function nextNote() {
+const nextNote = () => {
   const secondsPerBeat = 60.0 / currentStateObj.tempo; 
 
   currentStateObj.timeToNextNote += secondsPerBeat; 
@@ -79,18 +82,19 @@ function nextNote() {
   }
 }
 
-function scheduleNotes(beatNum, time){
-  const tracks = document.querySelectorAll('track'); 
+const scheduleNotes = (beatNum, time) => {
+  const tracks = document.querySelectorAll('.track'); 
 
+  // debugger
   currentStateObj.noteQueue.push({ note: beatNum, time }); 
 
-  for (let i = 0; i < tracks.length; i++) {
-
-    debugger // find the correct track and button at the right beatnum
-    if (tracks[i]) {  
-      const buffer = currentStateObj.syllableSamples[i]; 
+  for (let trackNum = 0; trackNum < tracks.length; trackNum++) {
+    // debugger 
+    if (tracks[trackNum].children[beatNum].dataset.active === 'true') {  
+      // debugger
+      const buffer = currentStateObj.syllableSamples[trackNum]; 
       
-      playSyllable(buffer, time)
+      playSyllable(buffer, time); 
     }
   }
 
@@ -98,24 +102,18 @@ function scheduleNotes(beatNum, time){
 }
 
 // from MDN docs on web audio api advanced techniques and Chris Wilson's A Tale Of Two Clocks article which MDN references
-function scheduler() {
-  const { 
-    timeToNextNote,
-    scheduleAheadTime,
-    audioContext,
-    currentNote
-  } = currentStateObj; 
-
-  while (timeToNextNote < audioContext.currentTime + scheduleAheadTime ) {
-      scheduleNotes(currentNote, timeToNextNote);
-      nextNote();
+export const scheduler = () => {  
+  // debugger
+  while (currentStateObj.timeToNextNote < currentStateObj.audioContext.currentTime + currentStateObj.scheduleAheadTime ) {
+    // debugger
+    scheduleNotes(currentStateObj.currentNote, currentStateObj.timeToNextNote);
+    nextNote();
   }
-  timerID = window.setTimeout(scheduler, lookahead);
+  currentStateObj.timerID = window.setTimeout(scheduler, currentStateObj.lookahead);
 }
 
+// TESTING ** need to remove **
 window.scheduler = scheduler; 
-
-
 
 
 

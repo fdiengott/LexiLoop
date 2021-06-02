@@ -25,8 +25,8 @@ const trackTemplate = (displayText, idx) => {
   section.appendChild(aside); 
 
   const buttonDiv = document.createElement('div'); 
-  buttonDiv.classList = `track`; 
-  buttonDiv.classList = `track-${idx}`; 
+  buttonDiv.classList.add(`track`); 
+  buttonDiv.classList.add(`track-${idx}`); 
 
   for (let i = 0; i < 8; i++) {
     let button = document.createElement('button'); 
