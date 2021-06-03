@@ -61,6 +61,9 @@ async function handleInput(e) {
   // CREATE THE TRACKS
   const trackContainer = document.getElementById('track-wrapper');
 
+  // RESET THE PLAY BUTTON SO IT CAN'T BE PUSHED UNTIL THE TRACKS ARE LOADED
+  document.querySelector('#play-btn').setAttribute("disabled", "disabled"); 
+
   // reset the samples array
   currentStateObj.syllableSamples = []; 
   const syllables = await getWordSyllables(inputText); 
@@ -86,6 +89,7 @@ export const start = () => {
   if (syllableSamples.length == currentStateObj.numSyllables && 
     syllableSamples.every( sample => typeof sample !== 'Promise')) {
     playBtn.removeAttribute("disabled"); 
+    playBtn.classList.toggle('active'); 
 
     if (currentStateObj.firstWord) {
       playBtn.addEventListener("click", handleNewWord);
