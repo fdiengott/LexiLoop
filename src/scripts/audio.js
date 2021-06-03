@@ -54,7 +54,11 @@ export const playSyllable = (audioBuffer, time) => {
   audioSource.connect( ctx.destination );
 
   audioSource.buffer = audioBuffer; 
-  audioSource.start(time); 
+
+  if (ctx.currentTime < time) {
+    audioSource.start(time); 
+  }
+
   return audioSource; 
 }
 
@@ -89,6 +93,7 @@ const scheduleNotes = (beatNum, time) => {
 // from MDN docs on web audio api advanced techniques and Chris Wilson's A Tale Of Two Clocks article which MDN references
 export const scheduler = () => {  
   while (currentStateObj.timeToNextNote < currentStateObj.audioContext.currentTime + currentStateObj.scheduleAheadTime ) {
+    console.log(`Scheduling notes at ${currentStateObj.timeToNextNote}`);
     scheduleNotes(currentStateObj.currentNote, currentStateObj.timeToNextNote);
     nextNote();
   }
