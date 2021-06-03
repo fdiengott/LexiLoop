@@ -1,23 +1,131 @@
 @import './reset'; 
 
 /* VARIABLES */
+$cyan: #2bd1fc; 
+$magenta: #ff48c4; 
+$yellow: #f3ea5f; 
+$purple: #c04df9; 
+$dark-gray: #2c2c2c; 
+
+/* TYPOGRAPHY */
+@import url('https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap');
+$display-font: 'Permanent Marker', cursive;
+
+@import url('https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100;0,200;0,300;0,400;1,100;1,200;1,300;1,400&display=swap');
+$text-font: 'Work Sans', sans-serif;
 
 
 /* LAYOUT */
+$header-height: 40px; 
+
+body {
+  background: url('../assets/images/80s_grid_background.png') no-repeat center center fixed;
+  background-size: cover;
+
+  display: grid;
+  grid-template-rows: $header-height 1fr 30px;
+}
+
+/* MIXINS  */
+@mixin flex($justify-content: center, $align-items: center, $flex-direction: row) {
+  display: flex;
+  justify-content: $justify-content;
+  align-items: $align-items;
+  flex-direction: $flex-direction;
+}
+
+/* COMPONENTS */
+body {
+  color: white;
+  font-family: $text-font;
+  font-weight: 300;
+}
+
 button {
   height: 30px;
   width: 30px;
   border: 1px solid coral;
 }
 
-/* MIXINS  */
-
-
-/* COMPONENTS */
 .beat-btn.active {
   background-color: #d159d1;
 }
 
+header {
+  @include flex(space-between);
+  padding: 15px;
+  text-transform: uppercase;
 
-/* TYPOGRAPHY */
+  h1 {
+    font-size: 36px;
+    color: $cyan;
+    font-family: $display-font; 
+  }
+}
 
+nav {
+  @include flex(space-between); 
+  
+  > * {
+    padding: 0 25px; 
+  }
+}
+
+.about-hover {
+  color: $cyan;
+  
+  .about-dropdown {
+    position: absolute;
+    display: none;
+    
+    top: $header-height;
+    right: 0;
+    width: 400px;
+    padding: 10px;
+    border: 2px solid $yellow;
+    background-color: $dark-gray;
+    color: white;
+
+    text-transform: none;
+
+  }
+
+  &:hover p {
+    display: block;
+  }
+
+}
+
+
+main {
+  @include flex(); 
+
+  div {
+    background-color: $dark-gray; 
+    width: 90%;
+    padding: 20px; 
+
+    section {
+      height: 70%; 
+    }
+    
+    article {
+      border: 1px solid $cyan; 
+      min-height: 40px;
+    }
+  }
+}
+
+form {
+  @include flex(flex-start, center, column);
+  label {
+    text-transform: uppercase;
+  } 
+  > * {
+    margin: 5px 0;
+  }
+
+  input {
+    padding: 4px 8px;
+  }
+}
