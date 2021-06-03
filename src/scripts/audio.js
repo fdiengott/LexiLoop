@@ -3,7 +3,7 @@ import { start } from '../index';
 export const currentStateObj = {
   audioContext: null, 
   isPlaying: false, 
-  tempo: 80.0,              // measured in bpm
+  tempo: 100.0,              // measured in bpm
   lookAhead: 25.0,          // how frequently to call the scheduling function
   scheduleAheadTime: 0.1,   // how far ahead to schedule notes
   timeToNextNote: 0, 

@@ -55,7 +55,7 @@ async function handleInput(e) {
   currentStateObj.currentInput = inputText; 
 
   // RESET THE INPUT
-  e.currentTarget.children[1].value = ""; 
+  // e.currentTarget.children[1].value = ""; 
   
 
   // CREATE THE TRACKS
@@ -106,7 +106,7 @@ const handleNewWord = (e) => {
       currentStateObj.audioContext.resume();
     }
 
-    playBtn.innerHTML = "&#9208;"
+    playBtn.innerHTML = "&#10074;&#10074;"
     currentStateObj.currentNote = 0;
     currentStateObj.nextNoteTime = currentStateObj.audioContext.currentTime;
     scheduler(); // kick off scheduling
@@ -116,7 +116,7 @@ const handleNewWord = (e) => {
     
   } else {
     // stop playing 
-    playBtn.innerHTML = "&#9658;"
+    playBtn.innerHTML = "&#9654;"
     
     window.clearTimeout(currentStateObj.timerID);
     e.currentTarget.dataset.playing = 'false';
