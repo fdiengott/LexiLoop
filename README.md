@@ -12,16 +12,16 @@ like reverb or panning, background soundscapes/atmosphere, or the ability to fet
 
 ## Functionality and MVPs
 In LexiLoop, users will be able to:
-[ ] Type in a correctly spelled word
-[ ] Input a pattern of looping beats with their inputted text syllabified - (is it possible to somehow syllabify the text-to-speech?)
-[ ] Play/pause the loop
-[ ] Affect the global tempo of the loop
-[ ] Affect the quality of each syllable using pitch, panning, etc. 
-[ ] Clear the loop and start over
+- [ ] Type in a correctly spelled word
+- [ ] Input a pattern of looping beats with their inputted text syllabified - (is it possible to somehow syllabify the text-to-speech? Which API could maybe do that?)
+- [ ] Play/pause the loop
+- [ ] Affect the global tempo of the loop
+- [ ] Affect the quality of each syllable using pitch, panning, etc. 
+- [ ] Clear the loop and start over
 
 In addition, this project will include:
 
-[ ] An 'About' explaining how the app works. 
+- [ ] An 'About' explaining how the app works. 
 
 ## Wireframe & file structure
 ### Wireframe
