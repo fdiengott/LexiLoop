@@ -3,8 +3,6 @@ import { start } from '../index';
 export const currentStateObj = {
   audioContext: null, 
   isPlaying: false, 
-  startTime: null, 
-  current16thNote: null,     // last note that was scheduled to be played
   tempo: 80.0,              // measured in bpm
   lookAhead: 25.0,          // how frequently to call the scheduling function
   scheduleAheadTime: 0.1,   // how far ahead to schedule notes
@@ -15,39 +13,29 @@ export const currentStateObj = {
   noteQueue: [],
   timerID: null, 
   lastNoteDrawn: 7,         // one less than the total number of beats
-  // currentEventListeners: [],
+  firstWord: true, 
+  isPlaying: false,
 };
 
 // ME_SPEAK
-export const playIPA = (ipa) => {
-  debugger  
-  meSpeak.loadVoice('en/en-us');
-  meSpeak.speak(ipa); 
-  
-  // const spoken = meSpeak.speak('[['+ipa+']]', { 'rawdata': 'mime' });
-  // if (spoken == null) {
-  //   alert("An error occurred: speaking failed.");
-  // }
-
-  // meSpeak.play(spoken);
-}
-
 export async function loadSyllableSound(syllable, audioContext, trackIdx) {
   currentStateObj.audioContext  ||= audioContext; 
-  let audio; 
 
   await meSpeak.speak(syllable, {rawdata: true}, async (success, id, stream) => {
-    // debugger
     if (success) {
-      audio = await getAudioBuffer(stream, audioContext); 
+      // let audio = await getAudioBuffer(stream, audioContext); 
+      let audio = await audioContext.decodeAudioData(stream); 
       currentStateObj.syllableSamples[trackIdx] = audio; 
     }
+    // THIS WILL ENABLE THE PLAY BUTTON AND SETUP THE CLICK HANDLER
     start(); 
   });  
 }
-function getAudioBuffer(data, audioContext) {
-  return audioContext.decodeAudioData(data); 
-}
+
+// // helper method for LoadSyllableSound to dr
+// function getAudioBuffer(data, audioContext) {
+//   return audioContext.decodeAudioData(data); 
+// }
 
 
 
@@ -85,13 +73,10 @@ const nextNote = () => {
 const scheduleNotes = (beatNum, time) => {
   const tracks = document.querySelectorAll('.track'); 
 
-  // debugger
   currentStateObj.noteQueue.push({ note: beatNum, time }); 
 
-  for (let trackNum = 0; trackNum < tracks.length; trackNum++) {
-    // debugger 
+  for (let trackNum = 0; trackNum < tracks.length; trackNum++) { 
     if (tracks[trackNum].children[beatNum].dataset.active === 'true') {  
-      // debugger
       const buffer = currentStateObj.syllableSamples[trackNum]; 
       
       playSyllable(buffer, time); 
@@ -103,30 +88,26 @@ const scheduleNotes = (beatNum, time) => {
 
 // from MDN docs on web audio api advanced techniques and Chris Wilson's A Tale Of Two Clocks article which MDN references
 export const scheduler = () => {  
-  // debugger
   while (currentStateObj.timeToNextNote < currentStateObj.audioContext.currentTime + currentStateObj.scheduleAheadTime ) {
-    // debugger
     scheduleNotes(currentStateObj.currentNote, currentStateObj.timeToNextNote);
     nextNote();
   }
   currentStateObj.timerID = window.setTimeout(scheduler, currentStateObj.lookahead);
 }
 
-// TESTING ** need to remove **
-window.scheduler = scheduler; 
 
+export const playIPA = (ipa) => {
+  debugger  
+  meSpeak.loadVoice('en/en-us');
+  meSpeak.speak(ipa); 
+  
+  // const spoken = meSpeak.speak('[['+ipa+']]', { 'rawdata': 'mime' });
+  // if (spoken == null) {
+  //   alert("An error occurred: speaking failed.");
+  // }
 
-
-
-
-
-
-
-
-
-
-
-
+  // meSpeak.play(spoken);
+}
 
 
 

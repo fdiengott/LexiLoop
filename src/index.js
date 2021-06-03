@@ -2,9 +2,28 @@ require("babel-core/register");
 require("babel-polyfill");
 import './styles/index.scss'; 
 
-import { getWordAudio, getWordSyllables, syllableToIpa, getWordIPA } from './scripts/dictionary'; 
-import { setupTracks, removeTracks } from './scripts/track';
-import { playWord, playIPA, loadSyllableSound, playSyllable, currentStateObj, scheduler } from './scripts/audio'; 
+import { 
+  getWordAudio, 
+  getWordSyllables, 
+  syllableToIpa, 
+  getWordIPA 
+} from './scripts/dictionary'; 
+
+import { 
+  setupTracks, 
+  removeTracks 
+} from './scripts/track';
+
+import { 
+  playWord, 
+  playIPA, 
+  loadSyllableSound, 
+  playSyllable, 
+  currentStateObj, 
+  scheduler 
+} from './scripts/audio'; 
+
+
 
 
 currentStateObj.currentInput = null; 
@@ -36,11 +55,14 @@ async function handleInput(e) {
   currentStateObj.currentInput = inputText; 
 
   // RESET THE INPUT
-  e.currentTarget.firstElementChild.firstElementChild.innerText = ""; 
+  e.currentTarget.firstElementChild.firstElementChild.value = ""; 
   
 
   // CREATE THE TRACKS
   const trackContainer = document.getElementById('track-wrapper');
+
+  // reset the samples array
+  currentStateObj.syllableSamples = []; 
   const syllables = await getWordSyllables(inputText); 
   currentStateObj.numSyllables = syllables.length; 
   setupTracks(syllables, trackContainer); 
@@ -56,41 +78,49 @@ async function handleInput(e) {
 
 export const start = () => {
   const playBtn = document.querySelector('#play-btn');
-  let isPlaying = false;
   const syllableSamples = Object.values(currentStateObj.syllableSamples); 
-  // debugger
+  currentStateObj.isPlaying = false;
+  debugger
 
   // if there are audio files and they are not promises
   if (syllableSamples.length == currentStateObj.numSyllables && 
     syllableSamples.every( sample => typeof sample !== 'Promise')) {
     playBtn.removeAttribute("disabled"); 
-    playBtn.addEventListener("click", (e) => {
-      isPlaying = !isPlaying
 
-      // start playing
-      if (isPlaying) { 
-
-        if ( currentStateObj.audioContext.state === 'suspended') {
-          currentStateObj.audioContext.resume();
-        }
-
-        playBtn.innerHTML = "&#9208;"
-        currentStateObj.currentNote = 0;
-        currentStateObj.nextNoteTime = currentStateObj.audioContext.currentTime;
-        scheduler(); // kick off scheduling
-        requestAnimationFrame(draw); // start the drawing loop.
-        debugger
-        e.currentTarget.dataset.playing = 'true';
-        
-      } else {
-        // stop playing 
-        playBtn.innerHTML = "&#9658;"
-        window.clearTimeout(currentStateObj.timerID);
-        e.currentTarget.dataset.playing = 'false';
-      }
-    })
+    if (currentStateObj.firstWord) {
+      playBtn.addEventListener("click", handleNewWord);
+      currentStateObj.firstWord = false; 
+    }
   }
 
+}
+
+const handleNewWord = (e) => {
+  debugger
+  currentStateObj.isPlaying = !currentStateObj.isPlaying; 
+
+  // start playing
+  if (currentStateObj.isPlaying) { 
+
+    if (currentStateObj.audioContext.state === 'suspended') {
+      currentStateObj.audioContext.resume();
+    }
+
+    playBtn.innerHTML = "&#9208;"
+    currentStateObj.currentNote = 0;
+    currentStateObj.nextNoteTime = currentStateObj.audioContext.currentTime;
+    scheduler(); // kick off scheduling
+    
+    requestAnimationFrame(draw); // start the drawing loop.
+    e.currentTarget.dataset.playing = 'true';
+    
+  } else {
+    // stop playing 
+    playBtn.innerHTML = "&#9658;"
+    
+    window.clearTimeout(currentStateObj.timerID);
+    e.currentTarget.dataset.playing = 'false';
+  }
 }
 
 // https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API/Advanced_techniques
@@ -98,7 +128,7 @@ function draw() {
   let drawNote = currentStateObj.lastNoteDrawn;
   let currentTime = currentStateObj.audioContext.currentTime;
   let noteQueue = currentStateObj.noteQueue; 
-  debugger
+  // debugger
 
   while (noteQueue.length && noteQueue[0].time < currentTime) {
       drawNote = currentStateObj.noteQueue[0].note;
@@ -109,8 +139,7 @@ function draw() {
   if (currentStateObj.lastNoteDrawn != drawNote) {
     const tracks = document.querySelectorAll('.track'); 
     tracks.forEach( track => {
-      debugger
-      track.children[currentStateObj.lastNoteDrawn].style.boxShadow = '0 0 8px rgba(0, 0, 0, 1)';
+      track.children[currentStateObj.lastNoteDrawn].style.boxShadow = '';
       track.children[drawNote].style.boxShadow = '0 0 8px rgba(137, 255, 82, 1)';
     });
 
@@ -121,13 +150,6 @@ function draw() {
 }
 
 function resetTracks() {
-  const tracks = document.querySelectorAll('.track'); 
-  while (tracks.firstChild) {
-    tracks.removeChild(tracks.firstChild)
-  }
-
-
-  // should remove all event listeners and trigger a remove all tracks
-
-  // removeTracks(document.getElementById('track-wrapper')); 
+  const trackContainer = document.getElementById('track-wrapper');
+  removeTracks(trackContainer); 
 }

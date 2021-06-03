@@ -3,8 +3,6 @@ import { handleClick } from './audio';
 
 
 export const setupTracks = (syllables, parentNode) => {
-  console.log('inside setupTracks');
-  
   syllables.forEach((syl, i) => {
     parentNode.appendChild(trackTemplate(syl, i))
   });
@@ -30,9 +28,13 @@ const trackTemplate = (displayText, idx) => {
 
   for (let i = 0; i < 8; i++) {
     let button = document.createElement('button'); 
-
     
-    button.classList = `beat-btn btn-${i}`; 
+    button.classList.add(`beat-btn`); 
+    button.classList.add(`btn-${i}`); 
+    if (i % 4 === 0) {
+      button.classList.add(`downbeat`); 
+    }
+
     button.dataset.beatNum = i; 
     button.dataset.active = false; 
     buttonDiv.appendChild(button); 
@@ -54,7 +56,7 @@ export const removeTracks = (parentNode) => {
 
   // MUST ALSO REMOVE ALL EVENT LISTENERS
 
-  while (parentNode.firstChild()) {
+  while (parentNode.firstChild) {
     parentNode.removeChild(parentNode.firstChild)
   }
 
