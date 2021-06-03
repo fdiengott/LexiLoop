@@ -51,11 +51,11 @@ async function handleInput(e) {
   e.preventDefault(); 
   resetTracks(); 
   
-  const inputText = e.currentTarget.firstElementChild.firstElementChild.value; 
+  const inputText = e.currentTarget.children[1].value; 
   currentStateObj.currentInput = inputText; 
 
   // RESET THE INPUT
-  e.currentTarget.firstElementChild.firstElementChild.value = ""; 
+  e.currentTarget.children[1].value = ""; 
   
 
   // CREATE THE TRACKS
@@ -80,7 +80,7 @@ export const start = () => {
   const playBtn = document.querySelector('#play-btn');
   const syllableSamples = Object.values(currentStateObj.syllableSamples); 
   currentStateObj.isPlaying = false;
-  debugger
+  // debugger
 
   // if there are audio files and they are not promises
   if (syllableSamples.length == currentStateObj.numSyllables && 

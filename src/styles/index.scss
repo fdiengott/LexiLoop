@@ -41,16 +41,6 @@ body {
   font-weight: 300;
 }
 
-button {
-  height: 30px;
-  width: 30px;
-  border: 1px solid coral;
-}
-
-.beat-btn.active {
-  background-color: #d159d1;
-}
-
 header {
   @include flex(space-between);
   padding: 15px;
@@ -68,6 +58,13 @@ nav {
   
   > * {
     padding: 0 25px; 
+  }
+
+  a {
+    color: $purple; /* or magenta */
+    &:visited {
+      color: $purple;
+    }
   }
 }
 
@@ -100,10 +97,11 @@ nav {
 main {
   @include flex(); 
 
-  div {
+  > div {
     background-color: $dark-gray; 
     width: 90%;
     padding: 20px; 
+    border: 1px solid $yellow;
 
     section {
       height: 70%; 
@@ -112,6 +110,7 @@ main {
     article {
       border: 1px solid $cyan; 
       min-height: 40px;
+      padding: 10px; 
     }
   }
 }
@@ -127,5 +126,33 @@ form {
 
   input {
     padding: 4px 8px;
+  }
+}
+
+
+.track-section {
+  @include flex(flex-start); 
+
+  aside {
+    width: 60px;
+  }
+
+  button {
+    height: 30px;
+    width: 30px;
+    background-color: $cyan;
+    border: 1px solid $dark-gray;
+    border-radius: 5px;
+    margin: 0 2px;
+
+    &.downbeat {
+      background-color: lighten($cyan, 30%);
+      margin-left: 5px;
+    }
+
+    &.active {
+      background-color: $magenta;
+    }
+
   }
 }

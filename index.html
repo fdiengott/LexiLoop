@@ -16,30 +16,35 @@
       <nav>
         <div class="about-hover">
           <h3>About</h3>
-          <p class="about-dropdown"></p>
+          <p class="about-dropdown">Welcome to LexiLoop! I'm excited that you're here! If you enter a word into that box which is listed in your normal dictionary, you'll see several tracks appear to create your sequencer, aka looper! Instead of using drum samples we are using text-to-speech for each syllable! Mix and match the syllables from your favorite words. Some of the syllables may be pronounced incorrectly, but that's just part of the fun!
+          <br>
+          <small>A website by Freddy Diengott</small>
+          </p>
         </div>
+        <a href="https://github.com/fdiengott" target="_blank">Github</a>
+        <a href="https://www.linkedin.com/in/freddiengott/" target="_blank">LinkedIn</a>
       </nav>
     </header>
     <main>
-      <form id="input-text-form">
-        <label for="words">
-          <input type="text" id="input-text">
-        </label>
-        <input type="submit">
-      </form>
-      <section>
-        <header>
-          <button id="play-btn">&#9658;</button>
-          <label for="tempo">
-            <input type="range" id="tempo" min="60" max="160">
-          </label>
-        </header>
-        <main id="track-wrapper">
-
-        </main>
-      </section>
-
+      <div>
+        <form id="input-text-form">
+          <label for="words">Please enter a word</label>
+          <input type="text" id="input-text" placeholder="Your text here">
+          <input type="submit" value="Create Tracks">
+        </form>
+        <section>
+          <header>
+            <button id="play-btn">&#9658;</button>
+            <label for="tempo">
+              <input type="range" id="tempo" min="60" max="160">
+            </label>
+          </header>
+          <article id="track-wrapper"></article>
+        </section>
+      </div>
     </main>
-
+    <footer>
+      <small>A project made by Freddy Diengott</small>
+    </footer>
   </body>
 </html>
