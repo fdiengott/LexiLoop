@@ -34,6 +34,17 @@ body {
   flex-direction: $flex-direction;
 }
 
+@mixin triangle($shape-clr, $size) {
+  position: absolute;
+  z-index: -1;
+
+  width: 0;
+  height: 0;
+  border-top: $size solid transparent;
+  border-right: $size*2 solid change-color($color: $shape-clr, $alpha: 0.3);
+  border-bottom: $size solid transparent;
+}
+
 /* COMPONENTS */
 body {
   color: white;
@@ -100,11 +111,12 @@ main {
   @include flex(); 
 
   > div {
+    z-index: 1;
     background-color: $dark-gray; 
     /* width: 90%; */
     min-width: 500px;
     padding: 20px; 
-    border: 1px solid $yellow;
+    border: 3px solid change-color($color: $yellow, $alpha: 0.6);
 
     section {
       height: 70%; 
@@ -231,7 +243,26 @@ input[type=range] {
   
   &:focus::-webkit-slider-runnable-track {
     background: black;
+  }
+
 }
 
+#triangle1 {
+  @include triangle(change-color($color: $cyan, $alpha: 0.3), 180px); 
+  top: 8%;
+  left: 4%;
+  transform: rotate(10deg);
+}
+#triangle2 {
+  @include triangle(change-color($color: $yellow, $alpha: 0.3), 120px); 
+  bottom: 10%;
+  right: 8%;
+  transform: rotate(80deg);
+}
+#triangle3 {
+  @include triangle(change-color($color: white, $alpha: 0.3), 80px); 
+  top: 0;
+  right: 25%;
+  transform: rotate(50deg);
 }
 
