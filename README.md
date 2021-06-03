@@ -68,3 +68,8 @@ webpack.prod.js
 - Word of the day / random word
 - Reverb
 - Background soundscapes / atmosphere
+
+
+
+## Other notes
+My hope for this project was to both correctly syllabify each word and correctly pronounce each syllable. I came to the conclusion that there is no simple, efficient way of achieving this goal given the two approaches I took. The first is that IPA (the international phonetic alphabet) isn't uniformly marked for syllables by any API, so though I could get the words pronounced, I couldn't split the words into syllables. The second is that without IPA, no text-to-speech API will pronounce the syllables correctly. I therefore elected to choose poorly pronounced syllables over correctly pronounced full words in an effort to prioritize the musical aspect of the project. 
