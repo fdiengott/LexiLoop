@@ -59,6 +59,12 @@ body {
   }
 }
 
+@mixin focus-shadow {
+  &:focus-visible {
+    box-shadow: 0 0 10px $yellow;
+  }
+}
+
 /* COMPONENTS */
 body {
   color: white;
@@ -99,11 +105,12 @@ nav {
   .about-dropdown {
     position: absolute;
     display: none;
+    z-index: 5;
     
     top: $header-height - 5;
-    right: 0;
+    right: 10px;
     width: 400px;
-    padding: 5px 7px;
+    padding: 12px;
     border: 2px solid $yellow;
     background-color: $dark-gray;
     color: white;
@@ -114,7 +121,7 @@ nav {
 
   }
 
-  &:hover p {
+  &:hover p, &:focus p {
     display: block;
   }
 
@@ -169,12 +176,11 @@ form {
   }
 
   input {
-    /* padding: 4px 8px; */
+    font-weight: 400;
     text-align: center; 
 
-    &:focus {
-      border-radius: 0; 
-    }
+
+    @include focus-shadow(); 
   }
 
   input[type=submit] {
@@ -182,6 +188,7 @@ form {
     color: white; 
     font-weight: 500;
     @include button-transition($purple); 
+    @include focus-shadow(); 
   }
 }
 
@@ -193,9 +200,8 @@ form {
   
   &.active {
     cursor: pointer;
-    /* border: 2px solid darken(white, 10%);
-    box-shadow: 0 0 3px $yellow;  */
     
+    @include focus-shadow(); 
     @include button-transition($purple); 
   }
 }
@@ -215,6 +221,8 @@ form {
     border: 1px solid $dark-gray;
     border-radius: 5px;
     margin: 0 2px;
+    
+    @include focus-shadow(); 
 
     &.downbeat {
       background-color: lighten($cyan, 30%);
@@ -236,6 +244,8 @@ form {
   height: 50px;
   width: 200px;
 
+  @include focus-shadow(); 
+
   &::-webkit-slider-runnable-track {
     width: 300px;
     height: 5px;
@@ -252,6 +262,12 @@ form {
     width: 11px;
     background: white;
     margin-top: -18px;
+
+    cursor: grab;
+
+    &:active {
+      cursor: grabbing;
+    }
   }
 
   &#pitch::-webkit-slider-thumb {
@@ -269,7 +285,7 @@ form {
 }
 
 input[type=range].input-knob {
-  box-shadow: none;
+  @include focus-shadow(); 
 }
 input[type=range]:focus {
   outline: none;
@@ -296,4 +312,9 @@ input[type=range]:focus {
 
 .slider-container {
   @include flex(center, flex-end, column); 
+}
+
+footer > small {
+  background-color: $dark-gray;
+  padding: 8px 10px;
 }
