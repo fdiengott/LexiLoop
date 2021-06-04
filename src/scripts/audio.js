@@ -57,13 +57,18 @@ export const playSyllable = (audioBuffer, time, trackNum) => {
 
   audioSource.buffer = audioBuffer; 
 
-  // TO CHANGE PITCH
-  debugger
-  const sampleRate = currentStateObj.localTrackData[trackNum]?.pitch; 
+  // TO CHANGE PITCH BY TRACK
+  const localSampleRate = Number(currentStateObj.localTrackData[trackNum]?.pitch); 
   
-  debugger
-  audioSource.playbackRate.value = sampleRate || currentStateObj.sampleRate; 
-  debugger
+  let sampleRate = (localSampleRate || 0) + currentStateObj.sampleRate; 
+
+  // SAMPLE RATE NEEDS A MINIMUM OR IT GETS TOO MUDDY 
+  if (sampleRate < 0.6) {
+    debugger
+    sampleRate = 0.6; 
+  }
+
+  audioSource.playbackRate.value = sampleRate; 
 
   if (ctx.currentTime < time) {
     audioSource.start(time); 

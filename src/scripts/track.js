@@ -50,9 +50,10 @@ const trackTemplate = (displayText, idx) => {
   // PITCH CONTROL
   const pitchKnob = document.createElement('input'); 
   pitchKnob.type = "range"; 
-  pitchKnob.min = "0.6"; 
-  pitchKnob.max = "2.2"; 
+  pitchKnob.min = "-0.4";   // this is 1.0 less than the final value because it'll be added to the global default
+  pitchKnob.max = "0.8";    // this is 1.0 less than the final value because it'll be added to the global default
   pitchKnob.step = "0.1"; 
+  pitchKnob.value = "0"; 
 
   pitchKnob.dataset.trackNum = idx; 
 
