@@ -4,7 +4,6 @@ skeleton_README.md
 .env
 keys.js
 dist/vendor/phoneme-synthesis
-dist/vendor/
 src/scripts/hiddenApiKeyFunctions.js
 /dist/main.js
 /dist/main.css
