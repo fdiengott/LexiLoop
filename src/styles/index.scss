@@ -136,7 +136,7 @@ main {
       height: 70%; 
 
       header {
-        @include flex(space-between); 
+        @include flex(space-between, flex-end); 
         padding: 10px 0;
 
         label {
@@ -189,6 +189,7 @@ form {
 #play-btn {
   background-color: change-color($color: $purple, $saturation: 50%, $lightness: 80%, $alpha: 1.0);
   border: 2px solid transparent;
+  margin-bottom: 3px;
   
   &.active {
     cursor: pointer;
@@ -282,3 +283,6 @@ input[type=range] {
   transform: rotate(50deg);
 }
 
+.slider-container {
+  @include flex(center, flex-end, column); 
+}
