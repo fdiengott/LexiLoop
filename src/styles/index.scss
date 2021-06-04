@@ -314,6 +314,9 @@ form {
   &#pitch::-webkit-slider-thumb {
     background: $yellow;
   }
+  &.pan::-webkit-slider-thumb {
+    background: $purple;
+  }
   
   &:focus {
     outline: none;

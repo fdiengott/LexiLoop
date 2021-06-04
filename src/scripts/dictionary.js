@@ -1,4 +1,5 @@
-import { fetchWordData, fetchIPA, fetchSyllables } from './util'; 
+import { fetchSyllables } from './util'; 
+import { fetchWordData, fetchIPA } from './hiddenApiKeyFunctions'; 
 
 
 export const getWordAudio = (searchWord) => {

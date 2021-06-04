@@ -50,13 +50,44 @@ export const handleClick = (e) => {
 export const handlePitchChange = e => {
   const sampleRate = e.currentTarget.value; 
   const trackNum = e.currentTarget.dataset.trackNum; 
-  currentStateObj.localTrackData[trackNum] = { pitch: sampleRate }; 
+  if (Object.keys(currentStateObj.localTrackData.trackNum)) {
+    currentStateObj.localTrackData[trackNum]['pitch'] = sampleRate; 
+  } else {
+    currentStateObj.localTrackData[trackNum] = { pitch: sampleRate }; 
+  }
 }
 
 export const handlePanChange = e => {
   const panAmt = e.currentTarget.value; 
   const trackNum = e.currentTarget.dataset.trackNum; 
-  currentStateObj.localTrackData[trackNum] = { pan: panAmt }; 
+  if (Object.keys(currentStateObj.localTrackData.trackNum)) {
+    currentStateObj.localTrackData[trackNum]['pan'] = panAmt; 
+  } else {
+    currentStateObj.localTrackData[trackNum] = { pan: panAmt }; 
+  }
+}
+
+export const handleFilterChange = e => {
+  // debugger
+  const trackNum = e.currentTarget.dataset.trackNum; 
+  const newTrackData = !Object.keys(currentStateObj.localTrackData[trackNum]); 
+
+  switch (e.target.id) {
+    case "onOff":
+      newTrackData ? currentStateObj.localTrackData[trackNum] = { onOff: e.target.value } : 
+        currentStateObj.localTrackData[trackNum]["onOff"] = e.target.value; 
+      break;
+    case "filterFreq":
+      newTrackData ? currentStateObj.localTrackData[trackNum] = { filterFreq: e.target.value } : 
+        currentStateObj.localTrackData[trackNum]["filterFreq"] = e.target.value; 
+      break;
+    case "filterQ":
+      newTrackData ? currentStateObj.localTrackData[trackNum] = { filterQ: e.target.value } : 
+        currentStateObj.localTrackData[trackNum]["filterQ"] = e.target.value; 
+      break;
+    default:
+      break;
+  }
 }
 
 export const playSyllable = (audioBuffer, time, trackNum) => {
