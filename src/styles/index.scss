@@ -234,6 +234,14 @@ form {
     }
 
   }
+
+  .track, .controls-container {
+    white-space: nowrap;
+  }
+
+  .controls-container {
+    margin-left: 20px;
+  }
 }
 
 .slider {
@@ -245,6 +253,11 @@ form {
   width: 200px;
 
   @include focus-shadow(); 
+  
+  &.pan {
+    height: 30px;
+    width: 100px;
+  }
 
   &::-webkit-slider-runnable-track {
     width: 300px;
@@ -253,6 +266,7 @@ form {
     border: none;
     border-radius: 3px;
   }
+
   
   &::-webkit-slider-thumb {
     -webkit-appearance: none;
@@ -262,12 +276,17 @@ form {
     width: 11px;
     background: white;
     margin-top: -18px;
-
+    
     cursor: grab;
-
+    
     &:active {
       cursor: grabbing;
     }
+  }
+  
+  &.slider::-webkit-slider-thumb {
+    height: 34px;
+    margin-top: -15px;
   }
 
   &#pitch::-webkit-slider-thumb {
