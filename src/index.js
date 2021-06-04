@@ -175,6 +175,8 @@ function draw() {
     });
 
     currentStateObj.lastNoteDrawn = drawNote;
+
+    jiggleTriangles(); 
   }
   
   requestAnimationFrame(draw);
@@ -183,4 +185,21 @@ function draw() {
 function resetTracks() {
   const trackContainer = document.getElementById('track-wrapper');
   removeTracks(trackContainer); 
+}
+
+const jiggleTriangles = () => {
+  const triangles = document.getElementsByClassName("triangle")
+  // const triangles = document.querySelectorAll('.triangle'); 
+  const degs = {
+    0: 10,
+    1: 80, 
+    2: 50, 
+  }
+
+  const jitter = [2, -2]; 
+
+  for (let i = 0; i < triangles.length; i++) {
+    let randomJitter =  jitter[Math.floor(Math.random()*2)]; 
+    triangles[i].style.transform = `rotate(${ degs[i] + randomJitter }deg)`; 
+  }
 }
