@@ -9,7 +9,7 @@ export const currentStateObj = {
   timeToNextNote: 0, 
   currentNote: 0, 
   syllableSamples: {},
-  numSyllables: 0, 
+  syllables: [], 
   sampleRate: 1.0, 
   noteQueue: [],
   timerID: null, 
@@ -20,10 +20,16 @@ export const currentStateObj = {
 };
 
 // ME_SPEAK
-export async function loadSyllableSound(syllable, audioContext, trackIdx) {
+export async function loadSyllableSound(syllable, audioContext, trackIdx, vox) {
   currentStateObj.audioContext  ||= audioContext; 
 
-  await meSpeak.speak(syllable, {rawdata: true}, async (success, id, stream) => {
+  let options = { rawdata: true }; 
+  
+  if (vox) {
+    options['variant'] = vox; 
+  }
+
+  await meSpeak.speak( syllable, options, async (success, id, stream) => {
     if (success) {
       let audio = await audioContext.decodeAudioData(stream); 
       currentStateObj.syllableSamples[trackIdx] = audio; 

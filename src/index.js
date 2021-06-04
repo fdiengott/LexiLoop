@@ -48,6 +48,7 @@ pitchControl.addEventListener('input', (e) => {
   currentStateObj.sampleRate = Number(e.currentTarget.value); 
 })
 
+
 function init() {
   meSpeak.loadVoice('en/en-us'); 
 }
@@ -72,15 +73,30 @@ async function handleInput(e) {
   // reset the samples array
   currentStateObj.syllableSamples = []; 
   const syllables = await getWordSyllables(inputText); 
-  currentStateObj.numSyllables = syllables.length; 
+  currentStateObj.syllables = syllables; 
   setupTracks(syllables, trackContainer); 
   
   // INITIALIZE AUDIO_CONTEXT
-  const ctx = new AudioContext(); 
+  const ctx = currentStateObj.audioContext || new AudioContext(); 
   
   // LOAD ALL OF THE SYLLABLE SOUNDS
   for (let i = 0; i < syllables.length; i++) {
     loadSyllableSound(syllables[i], ctx, i); 
+  }
+}
+
+function handleVoiceChange(e) {
+  document.querySelector('#play-btn').setAttribute("disabled", "disabled"); 
+  currentStateObj.syllableSamples = []; 
+
+  const syllables = currentStateObj.syllables; 
+  const ctx = currentStateObj.audioContext || new AudioContext(); 
+
+  debugger
+  const vox = e.currentTarget.value; 
+  
+  for (let i = 0; i < syllables.length; i++) {
+    loadSyllableSound(syllables[i], ctx, i, vox); 
   }
 }
 
@@ -91,13 +107,19 @@ export const start = () => {
   // debugger
 
   // if there are audio files and they are not promises
-  if (syllableSamples.length == currentStateObj.numSyllables && 
+  if (syllableSamples.length == currentStateObj.syllables.length && 
     syllableSamples.every( sample => typeof sample !== 'Promise')) {
     playBtn.removeAttribute("disabled"); 
     playBtn.classList.toggle('active'); 
 
     if (currentStateObj.firstWord) {
+      // SETTING UP EVENT LISTENERS 
       playBtn.addEventListener("click", handleNewWord);
+
+      const voices = document.querySelectorAll('.voice'); 
+      for (let i = 0; i < voices.length; i++) {
+        voices[i].addEventListener('change', handleVoiceChange); 
+      }
       currentStateObj.firstWord = false; 
     }
   }
@@ -148,7 +170,7 @@ function draw() {
     const tracks = document.querySelectorAll('.track'); 
     tracks.forEach( track => {
       track.children[currentStateObj.lastNoteDrawn].style.boxShadow = '';
-      track.children[drawNote].style.boxShadow = '0 0 8px rgba(137, 255, 82, 1)';
+      track.children[drawNote].style.boxShadow = '0 0 5px rgba(137, 255, 82, 1)';
     });
 
     currentStateObj.lastNoteDrawn = drawNote;
