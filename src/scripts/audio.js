@@ -49,10 +49,15 @@ export const handleClick = (e) => {
 }
 
 export const handlePitchChange = e => {
-  debugger
   const sampleRate = e.currentTarget.value; 
   const trackNum = e.currentTarget.dataset.trackNum; 
   currentStateObj.localTrackData[trackNum] = { pitch: sampleRate }; 
+}
+
+export const handlePanChange = e => {
+  const panAmt = e.currentTarget.value; 
+  const trackNum = e.currentTarget.dataset.trackNum; 
+  currentStateObj.localTrackData[trackNum] = { pan: panAmt }; 
 }
 
 export const playSyllable = (audioBuffer, time, trackNum) => {
@@ -63,24 +68,44 @@ export const playSyllable = (audioBuffer, time, trackNum) => {
 
   audioSource.buffer = audioBuffer; 
 
-  // TO CHANGE PITCH BY TRACK
-  const localSampleRate = Number(currentStateObj.localTrackData[trackNum]?.pitch); 
-  
-  let sampleRate = (localSampleRate || 0) + currentStateObj.sampleRate; 
+  // CHANGE PITCH/SAMPLE_RATE
+  audioSource.playbackRate.value = getSampleRate(trackNum); 
 
-  // SAMPLE RATE NEEDS A MINIMUM OR IT GETS TOO MUDDY 
-  if (sampleRate < 0.6) {
-    debugger
-    sampleRate = 0.6; 
-  }
-
-  audioSource.playbackRate.value = sampleRate; 
+  getPanning(trackNum, audioSource); 
 
   if (ctx.currentTime < time) {
     audioSource.start(time); 
   }
 
   return audioSource; 
+}
+
+const getSampleRate = (trackNum) => {
+  const localSampleRate = Number(currentStateObj.localTrackData[trackNum]?.pitch); 
+  
+  let sampleRate = (localSampleRate || 0) + currentStateObj.sampleRate; 
+
+  // SAMPLE RATE NEEDS A MINIMUM OR IT GETS TOO MUDDY 
+  if (sampleRate < 0.6) sampleRate = 0.6; 
+
+  return sampleRate; 
+}
+
+const getPanning = (trackNum, audioSource) => {
+  // if (currentStateObj[trackNum]) {
+  //   debugger
+  // }
+
+  if (currentStateObj.localTrackData[trackNum]?.pan) { 
+    debugger
+    const ctx = currentStateObj.audioContext; 
+    
+    const panNode = ctx.createStereoPanner(); 
+    panNode.pan.setValueAtTime( currentStateObj.localTrackData[trackNum].pan , ctx.currentTime); 
+    
+    audioSource.connect(panNode); 
+    panNode.connect(ctx.destination); 
+  }
 }
 
 const nextNote = () => {
@@ -119,50 +144,4 @@ export const scheduler = () => {
     nextNote();
   }
   currentStateObj.timerID = window.setTimeout(scheduler, currentStateObj.lookahead);
-}
-
-
-export const playIPA = (ipa) => {
-  debugger  
-  meSpeak.loadVoice('en/en-us');
-  meSpeak.speak(ipa); 
-  
-  // const spoken = meSpeak.speak('[['+ipa+']]', { 'rawdata': 'mime' });
-  // if (spoken == null) {
-  //   alert("An error occurred: speaking failed.");
-  // }
-
-  // meSpeak.play(spoken);
-}
-
-
-
-// SPEECH_SYNTHESIS
-{
-  // // create synthesizer that will use speak()
-  // const synth = window.speechSynthesis; 
-  
-  // // choose a voice
-  // const voices = synth.getVoices(); 
-  
-  // // choose first US english by default for now
-  // const chosenVoice = voices.filter(vox => vox.lang === 'en-US')[0]; 
-  
-  // // create a new utterance with inputted text
-  // const utterance = new SpeechSynthesisUtterance("default"/* TEXT FROM THE INPUT */ );
-  
-  // utterance.voice = chosenVoice; 
-  
-  // setInterval(synth.speak(utterance), 1000); 
-}
-
-export const playWord = (inputText) => {
-  const synth = window.speechSynthesis; 
-  const voices = synth.getVoices(); 
-  const chosenVoice = voices.filter(vox => vox.lang === 'en-US')[0]; 
-  const utterance = new SpeechSynthesisUtterance(inputText);
-  
-  utterance.voice = chosenVoice; 
-  
-  synth.speak(utterance); 
 }

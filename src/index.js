@@ -114,19 +114,20 @@ export const start = () => {
 
     if (currentStateObj.firstWord) {
       // SETTING UP EVENT LISTENERS 
-      playBtn.addEventListener("click", handleNewWord);
+      playBtn.addEventListener("click", handlePlay);
 
-      const voices = document.querySelectorAll('.voice'); 
-      for (let i = 0; i < voices.length; i++) {
-        voices[i].addEventListener('change', handleVoiceChange); 
-      }
+      // const voices = document.querySelectorAll('.voice'); 
+      // for (let i = 0; i < voices.length; i++) {
+      //   voices[i].addEventListener('change', handleVoiceChange); 
+      // }
+
       currentStateObj.firstWord = false; 
     }
   }
 
 }
 
-const handleNewWord = (e) => {
+const handlePlay = (e) => {
   currentStateObj.isPlaying = !currentStateObj.isPlaying; 
 
   // start playing

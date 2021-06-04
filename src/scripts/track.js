@@ -1,5 +1,9 @@
 
-import { handleClick, handlePitchChange } from './audio';
+import { 
+  handleClick, 
+  handlePitchChange, 
+  handlePanChange 
+} from './audio';
 
 
 export const setupTracks = (syllables, parentNode) => {
@@ -54,22 +58,34 @@ const trackTemplate = (displayText, idx) => {
   pitchKnob.max = "0.8";    // this is 1.0 less than the final value because it'll be added to the global default
   pitchKnob.step = "0.1"; 
   pitchKnob.value = "0"; 
-
   pitchKnob.dataset.trackNum = idx; 
+  
+  const panSlider = document.createElement('input'); 
+  panSlider.type = "range"; 
+  panSlider.min = "-1";
+  panSlider.max = "1";
+  panSlider.step = "0.1";
+  panSlider.value = "0";
+  panSlider.dataset.trackNum = idx; 
+  
 
   // USING INPUT KNOBS LIBRARY https://g200kg.github.io/input-knobs/
   pitchKnob.classList.add('input-knob'); 
   pitchKnob.dataset.diameter = "32"
   pitchKnob.dataset.fgcolor = "#f3ea5f"
 
+  panSlider.classList.add("slider"); 
+  panSlider.classList.add("pan"); 
+
 
   // <input type="range" id="pitch" min="0.6" max="2.2" step="0.2">
   
   // LOCAL CONTROLS LISTENERS
   pitchKnob.addEventListener("input", handlePitchChange, false);
-
+  panSlider.addEventListener("input", handlePanChange, false); 
   
   controlsDiv.appendChild(pitchKnob); 
+  controlsDiv.appendChild(panSlider); 
   section.appendChild(controlsDiv); 
 
   return section; 

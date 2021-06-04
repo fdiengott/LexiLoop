@@ -5,3 +5,4 @@ skeleton_README.md
 keys.js
 dist/vendor/phoneme-synthesis
 dist/vendor/
+src/scripts/hiddenApiKeyFunctions.js
