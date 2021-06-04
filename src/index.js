@@ -43,6 +43,11 @@ tempoControl.addEventListener('input', (e) => {
   currentStateObj.tempo = Number(e.currentTarget.value); 
 })
 
+const pitchControl = document.querySelector('#pitch'); 
+pitchControl.addEventListener('input', (e) => {
+  currentStateObj.sampleRate = Number(e.currentTarget.value); 
+})
+
 function init() {
   meSpeak.loadVoice('en/en-us'); 
 }
@@ -100,7 +105,6 @@ export const start = () => {
 }
 
 const handleNewWord = (e) => {
-  debugger
   currentStateObj.isPlaying = !currentStateObj.isPlaying; 
 
   // start playing

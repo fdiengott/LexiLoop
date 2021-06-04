@@ -10,6 +10,7 @@ export const currentStateObj = {
   currentNote: 0, 
   syllableSamples: {},
   numSyllables: 0, 
+  sampleRate: 1.0, 
   noteQueue: [],
   timerID: null, 
   lastNoteDrawn: 7,         // one less than the total number of beats
@@ -23,7 +24,6 @@ export async function loadSyllableSound(syllable, audioContext, trackIdx) {
 
   await meSpeak.speak(syllable, {rawdata: true}, async (success, id, stream) => {
     if (success) {
-      // let audio = await getAudioBuffer(stream, audioContext); 
       let audio = await audioContext.decodeAudioData(stream); 
       currentStateObj.syllableSamples[trackIdx] = audio; 
     }
@@ -31,12 +31,6 @@ export async function loadSyllableSound(syllable, audioContext, trackIdx) {
     start(); 
   });  
 }
-
-// // helper method for LoadSyllableSound to dr
-// function getAudioBuffer(data, audioContext) {
-//   return audioContext.decodeAudioData(data); 
-// }
-
 
 
 export const handleClick = (e) => { 
@@ -54,6 +48,9 @@ export const playSyllable = (audioBuffer, time) => {
   audioSource.connect( ctx.destination );
 
   audioSource.buffer = audioBuffer; 
+
+  // TO CHANGE PITCH
+  audioSource.playbackRate.value = currentStateObj.sampleRate; 
 
   if (ctx.currentTime < time) {
     audioSource.start(time); 
@@ -82,8 +79,9 @@ const scheduleNotes = (beatNum, time) => {
   for (let trackNum = 0; trackNum < tracks.length; trackNum++) { 
     if (tracks[trackNum].children[beatNum].dataset.active === 'true') {  
       const buffer = currentStateObj.syllableSamples[trackNum]; 
-      
-      playSyllable(buffer, time); 
+      const sampleRate = currentStateObj.sampleRate; 
+
+      playSyllable(buffer, time, sampleRate); 
     }
   }
 
@@ -93,7 +91,7 @@ const scheduleNotes = (beatNum, time) => {
 // from MDN docs on web audio api advanced techniques and Chris Wilson's A Tale Of Two Clocks article which MDN references
 export const scheduler = () => {  
   while (currentStateObj.timeToNextNote < currentStateObj.audioContext.currentTime + currentStateObj.scheduleAheadTime ) {
-    console.log(`Scheduling notes at ${currentStateObj.timeToNextNote}`);
+    // console.log(`Scheduling notes at ${currentStateObj.timeToNextNote}`);
     scheduleNotes(currentStateObj.currentNote, currentStateObj.timeToNextNote);
     nextNote();
   }
