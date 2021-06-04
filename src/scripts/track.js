@@ -1,5 +1,5 @@
 
-import { handleClick } from './audio';
+import { handleClick, handlePitchChange } from './audio';
 
 
 export const setupTracks = (syllables, parentNode) => {
@@ -40,22 +40,42 @@ const trackTemplate = (displayText, idx) => {
     buttonDiv.appendChild(button); 
   }
   
-  // probably need to add a specific event listener    
-  // buttonDiv.addEventListener("click", handleClick, { capture: false })
-  buttonDiv.addEventListener("click", handleClick, false )
-
+  // BUTTONS LISTENERS
+  buttonDiv.addEventListener("click", handleClick, false ); 
   section.appendChild(buttonDiv); 
 
-  // add filters and what not. Will call methods in audio.js
+  // LOCAL CONTROLS CONTAINER
+  const controlsDiv = document.createElement('div'); 
+  
+  // PITCH CONTROL
+  const pitchKnob = document.createElement('input'); 
+  pitchKnob.type = "range"; 
+  pitchKnob.min = "0.6"; 
+  pitchKnob.max = "2.2"; 
+  pitchKnob.step = "0.1"; 
+
+  pitchKnob.dataset.trackNum = idx; 
+
+  // USING INPUT KNOBS LIBRARY https://g200kg.github.io/input-knobs/
+  pitchKnob.classList.add('input-knob'); 
+  pitchKnob.dataset.diameter = "32"
+  pitchKnob.dataset.fgcolor = "#f3ea5f"
+
+
+  // <input type="range" id="pitch" min="0.6" max="2.2" step="0.2">
+  
+  // LOCAL CONTROLS LISTENERS
+  pitchKnob.addEventListener("input", handlePitchChange, false);
+
+  
+  controlsDiv.appendChild(pitchKnob); 
+  section.appendChild(controlsDiv); 
 
   return section; 
 
 }
 
 export const removeTracks = (parentNode) => {
-
-  // MUST ALSO REMOVE ALL EVENT LISTENERS
-
   while (parentNode.firstChild) {
     parentNode.removeChild(parentNode.firstChild)
   }

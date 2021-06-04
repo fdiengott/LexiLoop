@@ -16,6 +16,7 @@ export const currentStateObj = {
   lastNoteDrawn: 7,         // one less than the total number of beats
   firstWord: true, 
   isPlaying: false,
+  localTrackData: {},
 };
 
 // ME_SPEAK
@@ -41,7 +42,14 @@ export const handleClick = (e) => {
   button.dataset.active = button.dataset.active === "true" ? false : true; 
 }
 
-export const playSyllable = (audioBuffer, time) => {
+export const handlePitchChange = e => {
+  debugger
+  const sampleRate = e.currentTarget.value; 
+  const trackNum = e.currentTarget.dataset.trackNum; 
+  currentStateObj.localTrackData[trackNum] = { pitch: sampleRate }; 
+}
+
+export const playSyllable = (audioBuffer, time, trackNum) => {
   const ctx = currentStateObj.audioContext; 
 
   const audioSource = ctx.createBufferSource();
@@ -50,7 +58,12 @@ export const playSyllable = (audioBuffer, time) => {
   audioSource.buffer = audioBuffer; 
 
   // TO CHANGE PITCH
-  audioSource.playbackRate.value = currentStateObj.sampleRate; 
+  debugger
+  const sampleRate = currentStateObj.localTrackData[trackNum]?.pitch; 
+  
+  debugger
+  audioSource.playbackRate.value = sampleRate || currentStateObj.sampleRate; 
+  debugger
 
   if (ctx.currentTime < time) {
     audioSource.start(time); 
@@ -79,9 +92,8 @@ const scheduleNotes = (beatNum, time) => {
   for (let trackNum = 0; trackNum < tracks.length; trackNum++) { 
     if (tracks[trackNum].children[beatNum].dataset.active === 'true') {  
       const buffer = currentStateObj.syllableSamples[trackNum]; 
-      const sampleRate = currentStateObj.sampleRate; 
 
-      playSyllable(buffer, time, sampleRate); 
+      playSyllable(buffer, time, trackNum); 
     }
   }
 

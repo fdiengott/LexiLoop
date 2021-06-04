@@ -202,7 +202,7 @@ form {
 
 
 .track-section {
-  @include flex(flex-start); 
+  @include flex(space-between); 
 
   aside {
     width: 60px;
@@ -253,6 +253,10 @@ input[type=range] {
     background: white;
     margin-top: -18px;
   }
+
+  &#pitch::-webkit-slider-thumb {
+    background: $yellow;
+  }
   
   &:focus {
     outline: none;
@@ -262,6 +266,11 @@ input[type=range] {
     background: black;
   }
 
+}
+
+input[type=range].input-knob {
+  /* box-shadow: none; */
+  border-radius: 50%;
 }
 
 #triangle1 {
