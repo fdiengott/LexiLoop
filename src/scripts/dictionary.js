@@ -1,13 +1,13 @@
 // import { fetchSyllables } from './util'; 
-import { fetchWordData, fetchIPA } from './hiddenApiKeyFunctions'; 
+// import { fetchWordData, fetchIPA } from './hiddenApiKeyFunctions'; 
 
 
-export const getWordAudio = (searchWord) => {
-  let data = fetchWordData(searchWord); 
+// export const getWordAudio = (searchWord) => {
+//   let data = fetchWordData(searchWord); 
 
-  debugger
-  return data[0]?.hwi?.prs[0]?.sound?.audio; 
-}
+//   debugger
+//   return data[0]?.hwi?.prs[0]?.sound?.audio; 
+// }
 
 // WORDS API
 export async function getWordSyllables(searchWord) {
