@@ -13,8 +13,6 @@ export const setupTracks = (syllables, parentNode) => {
 }
 
 const trackTemplate = (displayText, idx) => {
-  // this will create the DOM elements that every track needs without the specifics
-
   // this is the container for each track
   const section = document.createElement('section');
   section.classList = 'track-section'; 
@@ -25,7 +23,27 @@ const trackTemplate = (displayText, idx) => {
 
   aside.appendChild(h3); 
   section.appendChild(aside); 
+  section.appendChild(createButtonDiv(idx)); 
+  
+  // LOCAL CONTROLS CONTAINER
+  const controlsDiv = document.createElement('div');
+  controlsDiv.classList.add('controls-container'); 
+  
+  controlsDiv.appendChild(createPitchKnob(idx)); 
+  controlsDiv.appendChild(createPanSlider(idx)); 
+  section.appendChild(controlsDiv); 
 
+  return section; 
+}
+
+export const removeTracks = (parentNode) => {
+  while (parentNode.firstChild) {
+    parentNode.removeChild(parentNode.firstChild)
+  }
+
+}
+
+const createButtonDiv = (idx) => {
   const buttonDiv = document.createElement('div'); 
   buttonDiv.classList.add(`track`); 
   buttonDiv.classList.add(`track-${idx}`); 
@@ -43,15 +61,13 @@ const trackTemplate = (displayText, idx) => {
     button.dataset.active = false; 
     buttonDiv.appendChild(button); 
   }
-  
-  // BUTTONS LISTENERS
-  buttonDiv.addEventListener("click", handleClick, false ); 
-  section.appendChild(buttonDiv); 
 
-  // LOCAL CONTROLS CONTAINER
-  const controlsDiv = document.createElement('div'); 
-  
-  // PITCH CONTROL
+  // BUTTONS LISTENERS
+  buttonDiv.addEventListener("click", handleClick, false); 
+  return buttonDiv; 
+}
+
+const createPitchKnob = (idx) => {
   const pitchKnob = document.createElement('input'); 
   pitchKnob.type = "range"; 
   pitchKnob.min = "-0.4";   // this is 1.0 less than the final value because it'll be added to the global default
@@ -59,7 +75,18 @@ const trackTemplate = (displayText, idx) => {
   pitchKnob.step = "0.1"; 
   pitchKnob.value = "0"; 
   pitchKnob.dataset.trackNum = idx; 
-  
+
+  // USING INPUT KNOBS LIBRARY https://g200kg.github.io/input-knobs/
+  pitchKnob.classList.add('input-knob'); 
+  pitchKnob.dataset.diameter = "32"
+  pitchKnob.dataset.fgcolor = "#f3ea5f"
+
+  pitchKnob.addEventListener("input", handlePitchChange, false);
+
+  return pitchKnob; 
+}
+
+const createPanSlider = (idx) => {
   const panSlider = document.createElement('input'); 
   panSlider.type = "range"; 
   panSlider.min = "-1";
@@ -67,35 +94,12 @@ const trackTemplate = (displayText, idx) => {
   panSlider.step = "0.1";
   panSlider.value = "0";
   panSlider.dataset.trackNum = idx; 
-  
-
-  // USING INPUT KNOBS LIBRARY https://g200kg.github.io/input-knobs/
-  pitchKnob.classList.add('input-knob'); 
-  pitchKnob.dataset.diameter = "32"
-  pitchKnob.dataset.fgcolor = "#f3ea5f"
 
   panSlider.classList.add("slider"); 
   panSlider.classList.add("pan"); 
 
-
-  // <input type="range" id="pitch" min="0.6" max="2.2" step="0.2">
-  
-  // LOCAL CONTROLS LISTENERS
-  pitchKnob.addEventListener("input", handlePitchChange, false);
   panSlider.addEventListener("input", handlePanChange, false); 
-  
-  controlsDiv.appendChild(pitchKnob); 
-  controlsDiv.appendChild(panSlider); 
-  section.appendChild(controlsDiv); 
 
-  return section; 
-
-}
-
-export const removeTracks = (parentNode) => {
-  while (parentNode.firstChild) {
-    parentNode.removeChild(parentNode.firstChild)
-  }
-
+  return panSlider; 
 }
 
