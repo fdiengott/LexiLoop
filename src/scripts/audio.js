@@ -92,12 +92,7 @@ const getSampleRate = (trackNum) => {
 }
 
 const getPanning = (trackNum, audioSource) => {
-  // if (currentStateObj[trackNum]) {
-  //   debugger
-  // }
-
   if (currentStateObj.localTrackData[trackNum]?.pan) { 
-    debugger
     const ctx = currentStateObj.audioContext; 
     
     const panNode = ctx.createStereoPanner(); 

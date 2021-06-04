@@ -66,6 +66,7 @@ async function handleInput(e) {
 
   // CREATE THE TRACKS
   const trackContainer = document.getElementById('track-wrapper');
+  trackContainer.appendChild(getLocalControlLabels()); 
 
   // RESET THE PLAY BUTTON SO IT CAN'T BE PUSHED UNTIL THE TRACKS ARE LOADED
   document.querySelector('#play-btn').setAttribute("disabled", "disabled"); 
@@ -84,6 +85,20 @@ async function handleInput(e) {
     loadSyllableSound(syllables[i], ctx, i); 
   }
 }
+
+const getLocalControlLabels = () => {
+  const localControlsLabels = document.createElement('div'); 
+  localControlsLabels.classList.add("local-controls-labels"); 
+
+  const pitchLabel = document.createElement('h2'); 
+  pitchLabel.innerText = "Pitch"; 
+  const panLabel = document.createElement('h2'); 
+  panLabel.innerText = "Pan"; 
+  
+  localControlsLabels.appendChild(pitchLabel); 
+  localControlsLabels.appendChild(panLabel); 
+  return localControlsLabels; 
+} 
 
 function handleVoiceChange(e) {
   document.querySelector('#play-btn').setAttribute("disabled", "disabled"); 
