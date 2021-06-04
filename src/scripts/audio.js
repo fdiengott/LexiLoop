@@ -3,14 +3,13 @@ import { start } from '../index';
 export const currentStateObj = {
   audioContext: null, 
   isPlaying: false, 
-  tempo: 100.0,              // measured in bpm
+  globalInputs: { tempo: 100.0, sampleRate: 1.0, volume: 0 }, // tempo measured in bpm
   lookAhead: 25.0,          // how frequently to call the scheduling function
   scheduleAheadTime: 0.1,   // how far ahead to schedule notes
   timeToNextNote: 0, 
   currentNote: 0, 
   syllableSamples: {},
   syllables: [], 
-  sampleRate: 1.0, 
   noteQueue: [],
   timerID: null, 
   lastNoteDrawn: 7,         // one less than the total number of beats
@@ -72,6 +71,7 @@ export const playSyllable = (audioBuffer, time, trackNum) => {
   audioSource.playbackRate.value = getSampleRate(trackNum); 
 
   getPanning(trackNum, audioSource); 
+  getVolume(audioSource, time); 
 
   if (ctx.currentTime < time) {
     audioSource.start(time); 
@@ -83,7 +83,7 @@ export const playSyllable = (audioBuffer, time, trackNum) => {
 const getSampleRate = (trackNum) => {
   const localSampleRate = Number(currentStateObj.localTrackData[trackNum]?.pitch); 
   
-  let sampleRate = (localSampleRate || 0) + currentStateObj.sampleRate; 
+  let sampleRate = (localSampleRate || 0) + currentStateObj.globalInputs.sampleRate; 
 
   // SAMPLE RATE NEEDS A MINIMUM OR IT GETS TOO MUDDY 
   if (sampleRate < 0.6) sampleRate = 0.6; 
@@ -103,8 +103,17 @@ const getPanning = (trackNum, audioSource) => {
   }
 }
 
+const getVolume = (audioSource, time) => {
+  const gainNode = currentStateObj.audioContext.createGain(); 
+
+  audioSource.connect(gainNode); 
+  gainNode.connect(currentStateObj.audioContext.destination); 
+
+  gainNode.gain.setValueAtTime(currentStateObj.globalInputs.volume, time); 
+}
+
 const nextNote = () => {
-  const secondsPerBeat = 60.0 / currentStateObj.tempo; 
+  const secondsPerBeat = 60.0 / currentStateObj.globalInputs.tempo; 
 
   currentStateObj.timeToNextNote += secondsPerBeat; 
   currentStateObj.currentNote++; 

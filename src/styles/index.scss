@@ -148,10 +148,16 @@ main {
 
         label {
           @include flex(); 
-
+          font-size: 14px;
+          
           input {
-            margin-left: 10px;
+            margin: 5px 0 0 10px;
           }
+        }
+        
+        > label {
+          flex-direction: column;
+          align-self: center;
         }
       }
     }
@@ -166,7 +172,7 @@ main {
 
 form {
   @include flex(flex-start, center, column);
-  margin-bottom: 40px;
+  margin-bottom: 20px;
 
   label {
     text-transform: uppercase;
@@ -245,6 +251,10 @@ form {
 
 }
 
+.playing {
+  box-shadow: 0 0 5px $yellow;
+}
+
 .local-controls-labels {
   @include flex(flex-end); 
   font-size: 14px;
@@ -257,7 +267,7 @@ form {
 
 .slider {
   -webkit-appearance: none;
-  background-color: $dark-gray;
+  background-color: darken($dark-gray, 3%);
   border: 3px solid black;
   box-shadow: inset 0 0 8px black;
   height: 50px;
@@ -284,7 +294,7 @@ form {
     border: 6px inset $dark-gray; 
     box-shadow: 0 0 2px 1px rgba(201, 201, 201, 0.5);
     height: 40px;
-    width: 11px;
+    width: 13px;
     background: white;
     margin-top: -18px;
     
@@ -298,8 +308,9 @@ form {
   &.slider::-webkit-slider-thumb {
     height: 34px;
     margin-top: -15px;
-  }
 
+  }
+  
   &#pitch::-webkit-slider-thumb {
     background: $yellow;
   }
@@ -316,6 +327,7 @@ form {
 
 input[type=range].input-knob {
   @include focus-shadow(); 
+  border-radius: 50%;
 }
 input[type=range]:focus {
   outline: none;

@@ -40,13 +40,19 @@ playBtn.setAttribute("disabled", "disabled");
 // GLOBAL CONTROLS
 const tempoControl = document.querySelector('#tempo'); 
 tempoControl.addEventListener('input', (e) => {
-  currentStateObj.tempo = Number(e.currentTarget.value); 
-})
+  currentStateObj.globalInputs.tempo = Number(e.currentTarget.value); 
+}); 
 
 const pitchControl = document.querySelector('#pitch'); 
 pitchControl.addEventListener('input', (e) => {
-  currentStateObj.sampleRate = Number(e.currentTarget.value); 
-})
+  currentStateObj.globalInputs.sampleRate = Number(e.currentTarget.value); 
+}); 
+
+const volumeControl = document.querySelector('#volume'); 
+volumeControl.addEventListener('input', (e) => {
+  debugger
+  currentStateObj.globalInputs.volume = Number(e.currentTarget.value); 
+}); 
 
 
 function init() {
@@ -174,7 +180,6 @@ function draw() {
   let drawNote = currentStateObj.lastNoteDrawn;
   let currentTime = currentStateObj.audioContext.currentTime;
   let noteQueue = currentStateObj.noteQueue; 
-  // debugger
 
   while (noteQueue.length && noteQueue[0].time < currentTime) {
       drawNote = currentStateObj.noteQueue[0].note;
@@ -185,8 +190,8 @@ function draw() {
   if (currentStateObj.lastNoteDrawn != drawNote) {
     const tracks = document.querySelectorAll('.track'); 
     tracks.forEach( track => {
-      track.children[currentStateObj.lastNoteDrawn].style.boxShadow = '';
-      track.children[drawNote].style.boxShadow = '0 0 5px rgba(137, 255, 82, 1)';
+      track.children[currentStateObj.lastNoteDrawn].classList.remove("playing");
+      track.children[drawNote].classList.add("playing");
     });
 
     currentStateObj.lastNoteDrawn = drawNote;
