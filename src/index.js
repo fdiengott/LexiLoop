@@ -50,7 +50,6 @@ pitchControl.addEventListener('input', (e) => {
 
 const volumeControl = document.querySelector('#volume'); 
 volumeControl.addEventListener('input', (e) => {
-  debugger
   currentStateObj.globalInputs.volume = Number(e.currentTarget.value); 
 }); 
 

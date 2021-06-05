@@ -108,17 +108,18 @@ const createPanSlider = (idx) => {
 
 const createFilterKnobs = (idx) => {
   const filterInputContainer = document.createElement('div'); 
-  filterInputContainer.dataset.trackNum = idx; 
-
-
+  // filterInputContainer.dataset.trackNum = idx; 
+  
+  
   const filterOnOffSwitch = document.createElement('input'); 
   filterOnOffSwitch.type = "checkbox"; 
   filterOnOffSwitch.classList.add("input-switch");
   filterOnOffSwitch.dataset.src = "./vendor/input-knobs/images/switch_offon.png"; 
   filterOnOffSwitch.dataset.diameter = "50"; 
-  filterOnOffSwitch.id = "onOff";
-
-
+  filterOnOffSwitch.id = "filterOn";
+  filterOnOffSwitch.dataset.trackNum = idx; 
+  filterOnOffSwitch.addEventListener("input", handleFilterChange, false); 
+  
   const filterFreqKnob = document.createElement('input'); 
   filterFreqKnob.classList.add('input-knob'); 
   filterFreqKnob.type = "range"; 
@@ -129,6 +130,8 @@ const createFilterKnobs = (idx) => {
   filterFreqKnob.dataset.fgcolor = "#f3ea5f"; // yellow
   filterFreqKnob.dataset.diameter = "32"
   filterFreqKnob.id = "filterFreq"; 
+  filterFreqKnob.dataset.trackNum = idx; 
+  filterFreqKnob.addEventListener("input", handleFilterChange, false); 
   
   // the higher the value, the smaller the sound band
   const filterQKnob = document.createElement('input'); 
@@ -140,12 +143,16 @@ const createFilterKnobs = (idx) => {
   filterQKnob.value = "500";
   filterQKnob.dataset.diameter = "32"
   filterQKnob.id = "filterQ"; 
-
+  filterQKnob.dataset.trackNum = idx; 
+  filterQKnob.addEventListener("input", handleFilterChange, false); 
+  
   filterInputContainer.appendChild(filterOnOffSwitch); 
   filterInputContainer.appendChild(filterFreqKnob); 
   filterInputContainer.appendChild(filterQKnob); 
 
-  // filterInputContainer.addEventListener("click", handleFilterChange, false); 
+
+  // Because of the input-knob library, normally event bubbling is not working for the two range inputs
+  // filterInputContainer.addEventListener("input", handleFilterChange, false); 
 
   return filterInputContainer; 
 }

@@ -247,6 +247,7 @@ form {
 
   .controls-container {
     margin-left: 20px;
+    @include flex(); 
   }
 
 }

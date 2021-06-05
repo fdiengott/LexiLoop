@@ -25,6 +25,7 @@ app.get("/syllables/:searchWord", (req, res) => {
     .then(formattedData => res.send(formattedData))
 }); 
 
+
 app.get("/randomWord", (req, res) => {
   fetch("https://wordsapiv1.p.rapidapi.com/words/?random=true", {
     method: "GET",
