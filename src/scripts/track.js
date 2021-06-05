@@ -124,7 +124,7 @@ const createFilterKnobs = (idx) => {
   filterFreqKnob.classList.add('input-knob'); 
   filterFreqKnob.type = "range"; 
   filterFreqKnob.min = "300";
-  filterFreqKnob.max = "5000";
+  filterFreqKnob.max = "15000";
   filterFreqKnob.step = "100";
   filterFreqKnob.value = "400";
   filterFreqKnob.dataset.fgcolor = "#f3ea5f"; // yellow
@@ -134,21 +134,21 @@ const createFilterKnobs = (idx) => {
   filterFreqKnob.addEventListener("input", handleFilterChange, false); 
   
   // the higher the value, the smaller the sound band
-  const filterQKnob = document.createElement('input'); 
-  filterQKnob.classList.add('input-knob'); 
-  filterQKnob.type = "range"; 
-  filterQKnob.min = "1";
-  filterQKnob.max = "1000";
-  filterQKnob.step = "50";
-  filterQKnob.value = "500";
-  filterQKnob.dataset.diameter = "32"
-  filterQKnob.id = "filterQ"; 
-  filterQKnob.dataset.trackNum = idx; 
-  filterQKnob.addEventListener("input", handleFilterChange, false); 
+  // const filterQKnob = document.createElement('input'); 
+  // filterQKnob.classList.add('input-knob'); 
+  // filterQKnob.type = "range"; 
+  // filterQKnob.min = "50";
+  // filterQKnob.max = "1000";
+  // filterQKnob.step = "50";
+  // filterQKnob.value = "500";
+  // filterQKnob.dataset.diameter = "32"
+  // filterQKnob.id = "filterQ"; 
+  // filterQKnob.dataset.trackNum = idx; 
+  // filterQKnob.addEventListener("input", handleFilterChange, false); 
   
   filterInputContainer.appendChild(filterOnOffSwitch); 
   filterInputContainer.appendChild(filterFreqKnob); 
-  filterInputContainer.appendChild(filterQKnob); 
+  // filterInputContainer.appendChild(filterQKnob); 
 
 
   // Because of the input-knob library, normally event bubbling is not working for the two range inputs

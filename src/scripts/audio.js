@@ -70,12 +70,11 @@ export const handlePanChange = e => {
 export const handleFilterChange = e => {
   const trackNum = e.currentTarget.dataset.trackNum; 
   const newTrackData = !(trackNum in currentStateObj.localTrackData); 
-  // debugger
   
   switch (e.target.id) {
     case "filterOn":
       newTrackData ? currentStateObj.localTrackData[trackNum] = { filterOn: e.target.checked } : 
-        currentStateObj.localTrackData[trackNum]["filterOn"] = e.target.value; 
+        currentStateObj.localTrackData[trackNum]["filterOn"] = e.target.checked; 
       break;
     case "filterFreq":
       newTrackData ? currentStateObj.localTrackData[trackNum] = { filterFreq: e.target.value } : 
@@ -101,9 +100,34 @@ export const playSyllable = (audioBuffer, time, trackNum) => {
   // CHANGE PITCH/SAMPLE_RATE
   audioSource.playbackRate.value = getSampleRate(trackNum); 
 
-  getPanning(trackNum, audioSource); 
-  getVolume(audioSource, time); 
-  getFiltering(trackNum); 
+  // getPanning(trackNum, audioSource, gainNode); 
+  // getVolume(audioSource, time, biquadFilter); 
+  // getFiltering(trackNum, ctx.destination); 
+
+
+  const panNode = ctx.createStereoPanner(); 
+  const gainNode = ctx.createGain(); 
+  const biquadFilter = ctx.createBiquadFilter(); 
+
+
+  if (currentStateObj.localTrackData[trackNum]?.pan) { 
+    panNode.pan.value = Number(currentStateObj.localTrackData[trackNum].pan); 
+  }
+  
+
+  if (currentStateObj.localTrackData?.[trackNum]?.filterOn) { 
+    getFiltering(biquadFilter, audioSource, panNode, trackNum); 
+  } else {
+    audioSource.connect(panNode); 
+  }
+  
+  
+  audioSource.connect(gainNode)
+  gainNode.connect(ctx.destination); 
+  panNode.connect(ctx.destination); 
+  
+
+  gainNode.gain.value = currentStateObj.globalInputs.volume;
 
   if (ctx.currentTime < time) {
     audioSource.start(time); 
@@ -123,7 +147,7 @@ const getSampleRate = (trackNum) => {
   return sampleRate; 
 }
 
-const getPanning = (trackNum, audioSource) => {
+const getPanning = (trackNum, audioSource, connector) => {
   if (currentStateObj.localTrackData[trackNum]?.pan) { 
     const ctx = currentStateObj.audioContext; 
     
@@ -135,7 +159,7 @@ const getPanning = (trackNum, audioSource) => {
   }
 }
 
-const getVolume = (audioSource, time) => {
+const getVolume = (audioSource, time, connector) => {
   const gainNode = currentStateObj.audioContext.createGain(); 
 
   audioSource.connect(gainNode); 
@@ -144,18 +168,12 @@ const getVolume = (audioSource, time) => {
   gainNode.gain.setValueAtTime(currentStateObj.globalInputs.volume, time); 
 }
 
-const getFiltering = (trackNum) => {
-  const biquadFilter = currentStateObj.audioContext.createBiquadFilter(); 
+const getFiltering = (filterNode, source, nextNode, trackNum) => {
+  filterNode.type = "bandpass"; 
+  filterNode.frequency.value = Number(currentStateObj.localTrackData[trackNum].filterFreq) || 400; 
 
-  biquadFilter.connect(currentStateObj.audioContext.destination); 
-
-  if (currentStateObj.localTrackData?.[trackNum]?.filterOn) { 
-    biquadFilter.type = "bandpass"; 
-    debugger // check if below needs to be cast into a number
-    biquadFilter.frequency.value = Number(currentStateObj.localTrackData[trackNum].filterFreq) || 400; 
-    biquadFilter.Q.value = Number(currentStateObj.localTrackData[trackNum].filterQ) || 500; 
-  }
-
+  source.connect(filterNode); 
+  filterNode.connect(nextNode); 
 }
 
 const nextNote = () => {
