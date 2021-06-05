@@ -110,11 +110,12 @@ export const playSyllable = (audioBuffer, time, trackNum) => {
   const biquadFilter = ctx.createBiquadFilter(); 
 
 
+  // PANNING
   if (currentStateObj.localTrackData[trackNum]?.pan) { 
     panNode.pan.value = Number(currentStateObj.localTrackData[trackNum].pan); 
   }
   
-
+  // FILTERING
   if (currentStateObj.localTrackData?.[trackNum]?.filterOn) { 
     getFiltering(biquadFilter, audioSource, panNode, trackNum); 
   } else {
@@ -126,7 +127,7 @@ export const playSyllable = (audioBuffer, time, trackNum) => {
   gainNode.connect(ctx.destination); 
   panNode.connect(ctx.destination); 
   
-
+  // VOLUME
   gainNode.gain.value = currentStateObj.globalInputs.volume;
 
   if (ctx.currentTime < time) {

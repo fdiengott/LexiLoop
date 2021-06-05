@@ -108,6 +108,7 @@ const createPanSlider = (idx) => {
 
 const createFilterKnobs = (idx) => {
   const filterInputContainer = document.createElement('div'); 
+  filterInputContainer.classList = "filter-container"; 
   // filterInputContainer.dataset.trackNum = idx; 
   
   
@@ -115,7 +116,7 @@ const createFilterKnobs = (idx) => {
   filterOnOffSwitch.type = "checkbox"; 
   filterOnOffSwitch.classList.add("input-switch");
   filterOnOffSwitch.dataset.src = "./vendor/input-knobs/images/switch_offon.png"; 
-  filterOnOffSwitch.dataset.diameter = "50"; 
+  filterOnOffSwitch.dataset.diameter = "45"; 
   filterOnOffSwitch.id = "filterOn";
   filterOnOffSwitch.dataset.trackNum = idx; 
   filterOnOffSwitch.addEventListener("input", handleFilterChange, false); 
@@ -133,6 +134,8 @@ const createFilterKnobs = (idx) => {
   filterFreqKnob.dataset.trackNum = idx; 
   filterFreqKnob.addEventListener("input", handleFilterChange, false); 
   
+
+  // FILTER Q 
   // the higher the value, the smaller the sound band
   // const filterQKnob = document.createElement('input'); 
   // filterQKnob.classList.add('input-knob'); 

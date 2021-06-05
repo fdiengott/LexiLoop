@@ -140,8 +140,6 @@ main {
     border: 3px solid change-color($color: $yellow, $alpha: 0.6);
 
     section {
-      height: 70%; 
-
       header {
         @include flex(space-between, flex-end); 
         padding: 10px 0;
@@ -243,13 +241,13 @@ form {
 
   .track, .controls-container {
     white-space: nowrap;
+    @include flex(); 
+    margin: 3px 0 3px 10px;
   }
 
   .controls-container {
-    margin-left: 20px;
-    @include flex(); 
+    margin-left: 10px;
   }
-
 }
 
 .playing {
@@ -262,7 +260,11 @@ form {
   margin-bottom: 5px;
 
   > * {
-    margin-right: 42px;
+    margin-right: 44px;
+  }
+
+  h2:last-child {
+    margin-right: 50px;
   }
 }
 
@@ -335,6 +337,17 @@ input[type=range].input-knob {
 }
 input[type=range]:focus {
   outline: none;
+}
+
+.input-switch {
+  margin: 0 -3px;
+}
+
+.filter-container {
+  @include flex(); 
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  padding-right: 5px;
+  margin-left: 5px;
 }
 
 #triangle1 {

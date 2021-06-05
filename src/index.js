@@ -99,9 +99,12 @@ const getLocalControlLabels = () => {
   pitchLabel.innerText = "Pitch"; 
   const panLabel = document.createElement('h2'); 
   panLabel.innerText = "Pan"; 
+  const filterLabel = document.createElement('h2'); 
+  filterLabel.innerText = "Filter"; 
   
   localControlsLabels.appendChild(pitchLabel); 
   localControlsLabels.appendChild(panLabel); 
+  localControlsLabels.appendChild(filterLabel); 
   return localControlsLabels; 
 } 
 
