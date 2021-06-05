@@ -12,11 +12,16 @@
 // WORDS API
 export async function getWordSyllables(searchWord) {
   let response = await fetch(`./syllables/${searchWord}`);
-
-  console.log(data);
   let data = await response.json(); 
-  console.log(data);
-  debugger
+
   // let data = await fetchSyllables(searchWord); 
   return data.syllables.list; 
+}
+
+export async function getRandomWord() {
+  let response = await fetch(`./randomWord`);
+  let data = await response.json(); 
+
+  debugger
+  return data; 
 }

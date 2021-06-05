@@ -25,6 +25,16 @@ app.get("/syllables/:searchWord", (req, res) => {
     .then(formattedData => res.send(formattedData))
 }); 
 
+app.get("/randomWord", (req, res) => {
+  fetch("https://wordsapiv1.p.rapidapi.com/words/?random=true", {
+    method: "GET",
+    headers: {
+      "x-rapidapi-key": process.env.WORDS_API_KEY,
+      "x-rapidapi-host": "wordsapiv1.p.rapidapi.com"
+    }
+  }).then(data => data.json())
+  .then(formattedData => res.send(formattedData))
+})
 
 
 app.listen(PORT, () => {
