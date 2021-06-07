@@ -4,7 +4,6 @@ import './styles/index.scss';
 
 import { 
   getWordSyllables, 
-  getRandomWord,
   getRandomWordSyllables
 } from './scripts/dictionary'; 
 
@@ -15,9 +14,9 @@ import {
 
 import { 
   loadSyllableSound, 
-  playSyllable, 
   currentStateObj, 
-  scheduler 
+  scheduler, 
+  resetEffects
 } from './scripts/audio'; 
 
 
@@ -88,7 +87,7 @@ const getClearButton = () => {
   clearBtn.addEventListener('click', (e) => {
     e.preventDefault(); 
     document.querySelector('#input-text').value = ""; 
-    disablePlay(); 
+    disablePlayBtn(); 
     resetTracks(); 
   });   
 
@@ -97,6 +96,7 @@ const getClearButton = () => {
 
 async function handleInput(e) {
   e.preventDefault(); 
+  stopPlaying(); 
   addLoader(); 
   
   let inputText = document.querySelector("#input-text").value; 
@@ -104,14 +104,15 @@ async function handleInput(e) {
 
   const syllables = await getWordSyllables(inputText); 
 
-  if (Array.isArray(syllables)) disablePlay(); 
+  if (Array.isArray(syllables)) disablePlayBtn(); 
 
   handleNewWord(syllables); 
 }
 
 async function handleRandomWord(e) {
   e.preventDefault(); 
-  disablePlay(); 
+  stopPlaying(); 
+  disablePlayBtn(); 
   addLoader(); 
 
   const randomWordSyllables = await getRandomWordSyllables(); 
@@ -127,6 +128,7 @@ async function handleRandomWord(e) {
 async function handleNewWord(syllables) {
   // reset the samples array
   currentStateObj.syllableSamples = []; 
+  resetEffects(); 
   
   if (Array.isArray(syllables)) {
     currentStateObj.syllables = syllables; 
@@ -169,7 +171,12 @@ async function handleNewWord(syllables) {
   }
 }
 
-const disablePlay = () => {
+const stopPlaying = () => {
+  playBtn.innerHTML = "&#9654;"
+  window.clearTimeout(currentStateObj.timerID);
+}
+
+const disablePlayBtn = () => {
   // RESET THE PLAY BUTTON SO IT CAN'T BE PUSHED UNTIL THE TRACKS ARE LOADED
   const playBtn = document.querySelector('#play-btn')
   playBtn.setAttribute("disabled", "disabled"); 

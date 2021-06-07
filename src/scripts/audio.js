@@ -1,9 +1,15 @@
 import { start } from '../index'; 
 
+// const BASE_TEMPO = { tempo: 100.0, sampleRate: 1.0, volume: 0 }; 
+const BASE_TEMPO = 100.0; 
+const BASE_SAMPLE_RATE = 1.0; 
+const BASE_VOLUME = 0;
+
 export const currentStateObj = {
   audioContext: null, 
   isPlaying: false, 
-  globalInputs: { tempo: 100.0, sampleRate: 1.0, volume: 0 }, // tempo measured in bpm
+  globalInputs: { tempo: BASE_TEMPO, sampleRate: BASE_SAMPLE_RATE, volume: BASE_VOLUME }, // tempo measured in bpm
+  // globalInputs: { tempo: 100.0, sampleRate: 1.0, volume: 0 }; 
   lookAhead: 25.0,          // how frequently to call the scheduling function
   scheduleAheadTime: 0.1,   // how far ahead to schedule notes
   timeToNextNote: 0, 
@@ -213,4 +219,14 @@ export const scheduler = () => {
     nextNote();
   }
   currentStateObj.timerID = window.setTimeout(scheduler, currentStateObj.lookahead);
+}
+
+export const resetEffects = () => {
+  currentStateObj.globalInputs = { tempo: BASE_TEMPO, sampleRate: BASE_SAMPLE_RATE, volume: BASE_VOLUME };
+  debugger
+  document.querySelector('#volume').value = BASE_VOLUME; 
+  document.querySelector('#tempo').value = BASE_TEMPO; 
+  document.querySelector('#pitch').value = BASE_SAMPLE_RATE; 
+
+  currentStateObj.localTrackData = {}; 
 }
