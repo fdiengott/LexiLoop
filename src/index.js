@@ -85,6 +85,7 @@ const getLocalControlLabels = () => {
 
 async function handleInput(e) {
   e.preventDefault(); 
+  addLoader(); 
   
   let inputText = document.querySelector("#input-text").value; 
   currentStateObj.currentInput = inputText; 
@@ -99,7 +100,9 @@ async function handleInput(e) {
 async function handleRandomWord(e) {
   e.preventDefault(); 
   disablePlay(); 
+  addLoader(); 
   
+
   const randomWordSyllables = await getRandomWordSyllables(); 
   const randomWord = randomWordSyllables.join(''); 
 
@@ -142,7 +145,7 @@ async function handleNewWord(syllables) {
     const oldError = document.querySelector('#error'); 
 
     const error = document.querySelector('#error') || document.createElement('p'); 
-    error.innerText = syllables; 
+    error.innerText = syllables;  
     
     if (!oldError) {
       error.id = "error"; 
@@ -161,11 +164,17 @@ const disablePlay = () => {
   playBtn.classList.remove('active'); 
 }
 
+const addLoader = () => {
+  const loader = document.createElement('div'); 
+  loader.innerText = "Loading..."; 
+  loader.id = 'loader'; 
+  document.querySelector('#track-wrapper').prepend(loader); 
+}
+
 export const start = () => {
   const playBtn = document.querySelector('#play-btn');
   const syllableSamples = Object.values(currentStateObj.syllableSamples); 
   currentStateObj.isPlaying = false;
-  // debugger
 
   // if there are audio files and they are not promises
   if (syllableSamples.length == currentStateObj.syllables.length && 
