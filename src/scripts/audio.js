@@ -223,7 +223,6 @@ export const scheduler = () => {
 
 export const resetEffects = () => {
   currentStateObj.globalInputs = { tempo: BASE_TEMPO, sampleRate: BASE_SAMPLE_RATE, volume: BASE_VOLUME };
-  debugger
   document.querySelector('#volume').value = BASE_VOLUME; 
   document.querySelector('#tempo').value = BASE_TEMPO; 
   document.querySelector('#pitch').value = BASE_SAMPLE_RATE; 

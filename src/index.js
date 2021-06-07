@@ -87,6 +87,7 @@ const getClearButton = () => {
   clearBtn.addEventListener('click', (e) => {
     e.preventDefault(); 
     document.querySelector('#input-text').value = ""; 
+    stopPlaying(); 
     disablePlayBtn(); 
     resetTracks(); 
   });   
