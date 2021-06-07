@@ -180,7 +180,13 @@ const addLoader = () => {
   const loader = document.createElement('div'); 
   loader.innerText = "Loading..."; 
   loader.id = 'loader'; 
-  document.querySelector('#track-wrapper').prepend(loader); 
+
+  let loaderModalScreen = document.createElement('div'); 
+  loaderModalScreen.id = 'loader-modal-screen'; 
+
+  const trackWrapper = document.querySelector('#track-wrapper'); 
+  trackWrapper.prepend(loaderModalScreen); 
+  trackWrapper.prepend(loader); 
 }
 
 export const start = () => {
