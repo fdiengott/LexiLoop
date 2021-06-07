@@ -12,13 +12,13 @@ async function getRandomWordSyllables() {
   let response = await fetch(`./randomWord`);
   let data = await response.json(); 
   
+  if (data.word.indexOf(' ') > 0 || data.word.indexOf('-') > 0) {
+    return getRandomWordSyllables(); 
+  }
+
   // OPTIMIZATION
   if (data.syllables) {
     return data.syllables.list; 
-  }
-  
-  if (data.word.indexOf(' ') > 0 || data.word.indexOf('-') > 0) {
-    return getRandomWordSyllables(); 
   }
   
   const syllables = await getWordSyllables(data.word); 

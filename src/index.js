@@ -36,13 +36,6 @@ playBtn.setAttribute("disabled", "disabled");
 
 // HANDLE BUTTONS
 document.querySelector('#random-word').addEventListener('click', handleRandomWord); 
-// document.querySelector('#clear').addEventListener('click', handleClear); 
-document.querySelector('#clear').addEventListener('click', (e) => {
-  e.preventDefault(); 
-  document.querySelector('#input-text').value = ""; 
-  disablePlay(); 
-  resetTracks(); 
-}); 
 
 
 // GLOBAL CONTROLS
@@ -83,6 +76,25 @@ const getLocalControlLabels = () => {
   return localControlsLabels; 
 } 
 
+const getClearButton = () => {
+  let clearBtn = document.querySelector('#clear'); 
+
+  if (!clearBtn) {
+    clearBtn = document.createElement('button'); 
+    clearBtn.id = 'clear'; 
+    clearBtn.innerText = 'clear'
+  }
+
+  clearBtn.addEventListener('click', (e) => {
+    e.preventDefault(); 
+    document.querySelector('#input-text').value = ""; 
+    disablePlay(); 
+    resetTracks(); 
+  });   
+
+  return clearBtn; 
+}
+
 async function handleInput(e) {
   e.preventDefault(); 
   addLoader(); 
@@ -101,7 +113,6 @@ async function handleRandomWord(e) {
   e.preventDefault(); 
   disablePlay(); 
   addLoader(); 
-  
 
   const randomWordSyllables = await getRandomWordSyllables(); 
   const randomWord = randomWordSyllables.join(''); 
@@ -129,6 +140,7 @@ async function handleNewWord(syllables) {
 
     // CREATE THE TRACKS
     const trackContainer = document.getElementById('track-wrapper');
+    trackContainer.appendChild(getClearButton()); 
     trackContainer.appendChild(getLocalControlLabels()); 
     setupTracks(syllables, trackContainer); 
     
