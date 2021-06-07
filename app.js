@@ -28,7 +28,11 @@ app.get("/syllables/:searchWord", (req, res) => {
 // https://wordsapiv1.p.mashape.com/words?random=true
 
 app.get("/randomWord", (req, res) => {
-  fetch("https://wordsapiv1.p.mashape.com/words?random=true")
+  fetch("https://wordsapiv1.p.mashape.com/words?random=true", {
+    headers: { 
+      "x-rapidapi-key": process.env.WORDS_API_KEY
+     }
+  })
     .then(data => data.json())
     .then(formattedData => res.send(formattedData))
 })
