@@ -25,12 +25,13 @@ app.get("/syllables/:searchWord", (req, res) => {
     .then(formattedData => res.send(formattedData))
 }); 
 
-// https://wordsapiv1.p.mashape.com/words?random=true
 
 app.get("/randomWord", (req, res) => {
-  fetch("https://wordsapiv1.p.mashape.com/words?random=true", {
+  fetch("https://wordsapiv1.p.rapidapi.com/words/?random=true", {
     headers: { 
-      "x-rapidapi-key": process.env.WORDS_API_KEY
+      "x-rapidapi-key": process.env.WORDS_API_KEY,
+      "x-rapidapi-host": "wordsapiv1.p.rapidapi.com",
+	    "useQueryString": true
      }
   })
     .then(data => data.json())
