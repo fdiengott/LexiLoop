@@ -51,11 +51,16 @@ body {
   box-shadow: 0 0 0 3px darken($color, 30%), 
               0 0 8px black;
   transition: box-shadow 30ms;
+  cursor: pointer;
   
   &:active {
     transform: scale(0.95); 
     box-shadow: unset;
     transition: box-shadow 100ms;
+  }
+
+  &:hover {
+    color: $yellow;
   }
 }
 
@@ -141,11 +146,13 @@ main {
 
     > header {
       display: grid;
-      grid-template-columns: 3fr 1fr;
+      grid-template-columns: 2fr 1fr;
 
       .other-button-container {
         @include flex($flex-direction: column); 
         font-size: 14px;
+        justify-self: flex-start;
+        margin-left: 5px;
       }
     }
 
@@ -198,7 +205,6 @@ form {
   }
 
   input[type=submit] {
-    cursor: pointer;
     color: white; 
     font-weight: 500;
     @include button-transition($purple); 
@@ -206,17 +212,36 @@ form {
   }
 }
 
+#clear {
+  background: none;
+  color: white;
+  text-decoration: underline;
+  cursor: pointer;
+  margin: 16px 0;
+
+  &:hover {
+    color: $yellow;
+  }
+}
+
+#random-word {
+  @include button-transition($purple); 
+  color: white;
+
+  > * {
+    margin: 10px;
+  }
+}
 
 #play-btn {
   background-color: change-color($color: $purple, $saturation: 50%, $lightness: 80%, $alpha: 1.0);
   border: 2px solid transparent;
   margin-bottom: 3px;
   
-  &.active {
-    cursor: pointer;
-    
+  &.active {    
     @include focus-shadow(); 
     @include button-transition($purple); 
+    margin-left: 3px;
   }
 }
 
