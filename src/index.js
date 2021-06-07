@@ -3,10 +3,8 @@ require("babel-polyfill");
 import './styles/index.scss'; 
 
 import { 
-  getWordAudio, 
   getWordSyllables, 
-  syllableToIpa, 
-  getWordIPA 
+  getRandomWord
 } from './scripts/dictionary'; 
 
 import { 
@@ -15,8 +13,6 @@ import {
 } from './scripts/track';
 
 import { 
-  playWord, 
-  playIPA, 
   loadSyllableSound, 
   playSyllable, 
   currentStateObj, 
@@ -36,6 +32,8 @@ document.querySelector("#input-text-form").addEventListener("submit", handleInpu
 const playBtn = document.querySelector('#play-btn'); 
 playBtn.setAttribute("disabled", "disabled"); 
 
+
+document.querySelector('#random-word').addEventListener('click', handleRandomWord); 
 
 // GLOBAL CONTROLS
 const tempoControl = document.querySelector('#tempo'); 
@@ -60,35 +58,12 @@ function init() {
 
 async function handleInput(e) {
   e.preventDefault(); 
-  resetTracks(); 
   
-  const inputText = e.currentTarget.children[1].value; 
+  // let inputText = e.currentTarget.children[e.currentTarget.children.length - 2].value;
+  let inputText = document.querySelector("#input-text").value; 
   currentStateObj.currentInput = inputText; 
 
-  // RESET THE INPUT
-  // e.currentTarget.children[1].value = ""; 
-  
-
-  // CREATE THE TRACKS
-  const trackContainer = document.getElementById('track-wrapper');
-  trackContainer.appendChild(getLocalControlLabels()); 
-
-  // RESET THE PLAY BUTTON SO IT CAN'T BE PUSHED UNTIL THE TRACKS ARE LOADED
-  document.querySelector('#play-btn').setAttribute("disabled", "disabled"); 
-
-  // reset the samples array
-  currentStateObj.syllableSamples = []; 
-  const syllables = await getWordSyllables(inputText); 
-  currentStateObj.syllables = syllables; 
-  setupTracks(syllables, trackContainer); 
-  
-  // INITIALIZE AUDIO_CONTEXT
-  const ctx = currentStateObj.audioContext || new AudioContext(); 
-  
-  // LOAD ALL OF THE SYLLABLE SOUNDS
-  for (let i = 0; i < syllables.length; i++) {
-    loadSyllableSound(syllables[i], ctx, i); 
-  }
+  handleNewWord(inputText); 
 }
 
 const getLocalControlLabels = () => {
@@ -107,6 +82,69 @@ const getLocalControlLabels = () => {
   localControlsLabels.appendChild(filterLabel); 
   return localControlsLabels; 
 } 
+
+async function handleRandomWord(e) {
+  e.preventDefault(); 
+  
+  const randomWord = await getRandomWord(); 
+
+  const input = document.querySelector('#input-text'); 
+  input.value = randomWord; 
+
+  handleNewWord(randomWord); 
+}
+
+async function handleNewWord(newWord) {
+  // RESET THE PLAY BUTTON SO IT CAN'T BE PUSHED UNTIL THE TRACKS ARE LOADED
+  const playBtn = document.querySelector('#play-btn')
+  playBtn.setAttribute("disabled", "disabled"); 
+  playBtn.classList.remove('active'); 
+  
+  // reset the samples array
+  currentStateObj.syllableSamples = []; 
+  const syllables = await getWordSyllables(newWord); 
+  debugger
+  
+  if (Array.isArray(syllables)) {
+    currentStateObj.syllables = syllables; 
+
+    let error = document.querySelector('#error'); 
+    if (error) {
+      error.remove(); 
+    }
+    debugger
+    
+    resetTracks(); 
+
+    // CREATE THE TRACKS
+    const trackContainer = document.getElementById('track-wrapper');
+    trackContainer.appendChild(getLocalControlLabels()); 
+    setupTracks(syllables, trackContainer); 
+    
+    // INITIALIZE AUDIO_CONTEXT
+    const ctx = currentStateObj.audioContext || new AudioContext(); 
+    
+    // LOAD ALL OF THE SYLLABLE SOUNDS
+    for (let i = 0; i < syllables.length; i++) {
+      loadSyllableSound(syllables[i], ctx, i); 
+    }
+
+  // IF ERROR
+  } else {
+    const oldError = document.querySelector('#error'); 
+
+    const error = document.querySelector('#error') || document.createElement('p'); 
+    error.innerText = syllables; 
+    
+    if (!oldError) {
+      error.id = "error"; 
+      
+      const inputTextForm = document.getElementById('input-text-form'); 
+      inputTextForm.prepend(error); 
+    }
+
+  }
+}
 
 function handleVoiceChange(e) {
   document.querySelector('#play-btn').setAttribute("disabled", "disabled"); 
@@ -133,7 +171,7 @@ export const start = () => {
   if (syllableSamples.length == currentStateObj.syllables.length && 
     syllableSamples.every( sample => typeof sample !== 'Promise')) {
     playBtn.removeAttribute("disabled"); 
-    playBtn.classList.toggle('active'); 
+    playBtn.classList.add('active'); 
 
     if (currentStateObj.firstWord) {
       // SETTING UP EVENT LISTENERS 

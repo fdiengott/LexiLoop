@@ -10,18 +10,36 @@
 // }
 
 // WORDS API
-export async function getWordSyllables(searchWord) {
+async function getWordSyllables(searchWord) {
   let response = await fetch(`./syllables/${searchWord}`);
   let data = await response.json(); 
 
+  debugger
   // let data = await fetchSyllables(searchWord); 
-  return data.syllables.list; 
+  return data.syllables ? data.syllables.list : data.message; 
+
 }
 
-export async function getRandomWord() {
+async function getRandomWord() {
   let response = await fetch(`./randomWord`);
   let data = await response.json(); 
 
   debugger
-  return data; 
+  return filterWord(data.word); 
 }
+
+const filterWord = (word) => {
+  debugger
+  if (word.indexOf(' ') > 0) {
+    return word.split(' ')[0]; 
+  } 
+  
+  if (word.indexOf('-') > 0) {
+    return word.split('-')[0]; 
+  }
+
+  return word; 
+}
+
+module.exports.getWordSyllables = getWordSyllables; 
+module.exports.getRandomWord = getRandomWord; 
