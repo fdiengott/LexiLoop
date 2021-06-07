@@ -6,6 +6,7 @@ $magenta: #ff48c4;
 $yellow: #f3ea5f; 
 $purple: #c04df9; 
 $dark-gray: #2c2c2c; 
+$red: #ff5d5e; 
 
 /* TYPOGRAPHY */
 @import url('https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap');
@@ -488,4 +489,11 @@ footer > small {
     box-shadow: 0 -2em;
     height: 3em;
   }
+}
+
+#error {
+  font-size: 14px;
+  color: $red; 
+  font-style: italic;
+  margin: 0;
 }

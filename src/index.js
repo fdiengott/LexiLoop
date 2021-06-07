@@ -169,6 +169,9 @@ async function handleNewWord(syllables) {
       inputTextForm.prepend(error); 
     }
 
+    document.querySelector('#loader').remove(); 
+    document.querySelector('#loader-modal-screen').remove(); 
+
   }
 }
 
