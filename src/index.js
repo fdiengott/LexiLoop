@@ -28,13 +28,22 @@ currentStateObj.currentInput = null;
 document.addEventListener("DOMContentLoaded", init); 
 
 
-// should maybe change this to a debouncing function that fires after a certain amount of time elapses without typing
+// should this be a debouncing function that fires after a certain amount of time without the user typing
 document.querySelector("#input-text-form").addEventListener("submit", handleInput);
 const playBtn = document.querySelector('#play-btn'); 
 playBtn.setAttribute("disabled", "disabled"); 
 
 
+// HANDLE BUTTONS
 document.querySelector('#random-word').addEventListener('click', handleRandomWord); 
+// document.querySelector('#clear').addEventListener('click', handleClear); 
+document.querySelector('#clear').addEventListener('click', (e) => {
+  e.preventDefault(); 
+  document.querySelector('#input-text').value = ""; 
+  disablePlay(); 
+  resetTracks(); 
+}); 
+
 
 // GLOBAL CONTROLS
 const tempoControl = document.querySelector('#tempo'); 
@@ -101,13 +110,6 @@ async function handleRandomWord(e) {
   handleNewWord(randomWordSyllables); 
 }
 
-const disablePlay = () => {
-  // RESET THE PLAY BUTTON SO IT CAN'T BE PUSHED UNTIL THE TRACKS ARE LOADED
-  const playBtn = document.querySelector('#play-btn')
-  playBtn.setAttribute("disabled", "disabled"); 
-  playBtn.classList.remove('active'); 
-}
-
 async function handleNewWord(syllables) {
   // reset the samples array
   currentStateObj.syllableSamples = []; 
@@ -152,19 +154,11 @@ async function handleNewWord(syllables) {
   }
 }
 
-function handleVoiceChange(e) {
-  document.querySelector('#play-btn').setAttribute("disabled", "disabled"); 
-  currentStateObj.syllableSamples = []; 
-
-  const syllables = currentStateObj.syllables; 
-  const ctx = currentStateObj.audioContext || new AudioContext(); 
-
-  debugger
-  const vox = e.currentTarget.value; 
-  
-  for (let i = 0; i < syllables.length; i++) {
-    loadSyllableSound(syllables[i], ctx, i, vox); 
-  }
+const disablePlay = () => {
+  // RESET THE PLAY BUTTON SO IT CAN'T BE PUSHED UNTIL THE TRACKS ARE LOADED
+  const playBtn = document.querySelector('#play-btn')
+  playBtn.setAttribute("disabled", "disabled"); 
+  playBtn.classList.remove('active'); 
 }
 
 export const start = () => {
@@ -267,5 +261,21 @@ const jiggleTriangles = () => {
   for (let i = 0; i < triangles.length; i++) {
     let randomJitter =  jitter[Math.floor(Math.random()*2)]; 
     triangles[i].style.transform = `rotate(${ degs[i] + randomJitter }deg)`; 
+  }
+}
+
+
+function handleVoiceChange(e) {
+  document.querySelector('#play-btn').setAttribute("disabled", "disabled"); 
+  currentStateObj.syllableSamples = []; 
+
+  const syllables = currentStateObj.syllables; 
+  const ctx = currentStateObj.audioContext || new AudioContext(); 
+
+  debugger
+  const vox = e.currentTarget.value; 
+  
+  for (let i = 0; i < syllables.length; i++) {
+    loadSyllableSound(syllables[i], ctx, i, vox); 
   }
 }
