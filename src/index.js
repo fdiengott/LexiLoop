@@ -4,7 +4,8 @@ import './styles/index.scss';
 
 import { 
   getWordSyllables, 
-  getRandomWord
+  getRandomWord,
+  getRandomWordSyllables
 } from './scripts/dictionary'; 
 
 import { 
@@ -56,16 +57,6 @@ function init() {
   meSpeak.loadVoice('en/en-us'); 
 }
 
-async function handleInput(e) {
-  e.preventDefault(); 
-  
-  // let inputText = e.currentTarget.children[e.currentTarget.children.length - 2].value;
-  let inputText = document.querySelector("#input-text").value; 
-  currentStateObj.currentInput = inputText; 
-
-  handleNewWord(inputText); 
-}
-
 const getLocalControlLabels = () => {
   const localControlsLabels = document.createElement('div'); 
   localControlsLabels.classList.add("local-controls-labels"); 
@@ -83,27 +74,43 @@ const getLocalControlLabels = () => {
   return localControlsLabels; 
 } 
 
-async function handleRandomWord(e) {
+async function handleInput(e) {
   e.preventDefault(); 
   
-  const randomWord = await getRandomWord(); 
+  let inputText = document.querySelector("#input-text").value; 
+  currentStateObj.currentInput = inputText; 
+
+  const syllables = await getWordSyllables(inputText); 
+
+  if (Array.isArray(syllables)) disablePlay(); 
+
+  handleNewWord(syllables); 
+}
+
+async function handleRandomWord(e) {
+  e.preventDefault(); 
+  disablePlay(); 
+  
+  const randomWordSyllables = await getRandomWordSyllables(); 
+  const randomWord = randomWordSyllables.join(''); 
 
   const input = document.querySelector('#input-text'); 
   input.value = randomWord; 
+  currentStateObj.currentInput = randomWord; 
 
-  handleNewWord(randomWord); 
+  handleNewWord(randomWordSyllables); 
 }
 
-async function handleNewWord(newWord) {
+const disablePlay = () => {
   // RESET THE PLAY BUTTON SO IT CAN'T BE PUSHED UNTIL THE TRACKS ARE LOADED
   const playBtn = document.querySelector('#play-btn')
   playBtn.setAttribute("disabled", "disabled"); 
   playBtn.classList.remove('active'); 
-  
+}
+
+async function handleNewWord(syllables) {
   // reset the samples array
   currentStateObj.syllableSamples = []; 
-  const syllables = await getWordSyllables(newWord); 
-  debugger
   
   if (Array.isArray(syllables)) {
     currentStateObj.syllables = syllables; 
@@ -112,7 +119,6 @@ async function handleNewWord(newWord) {
     if (error) {
       error.remove(); 
     }
-    debugger
     
     resetTracks(); 
 
