@@ -105,10 +105,11 @@ nav {
   }
 }
 
-.about-hover {
+.menu-hover {
   color: $cyan;
+  cursor: pointer;
   
-  .about-dropdown {
+  .menu-dropdown {
     position: absolute;
     display: none;
     z-index: 5;
