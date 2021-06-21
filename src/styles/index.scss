@@ -10,11 +10,20 @@ $red: #ff5d5e;
 
 /* TYPOGRAPHY */
 @import url('https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap');
-$display-font: 'Permanent Marker', cursive;
+/* $display-font: 'Permanent Marker', cursive; */
 
 @import url('https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100;0,200;0,300;0,400;1,100;1,200;1,300;1,400&display=swap');
 $text-font: 'Work Sans', sans-serif;
 
+@font-face {
+  font-family: outrun_future;
+  src: url('../assets/fonts/outrun_future-webfont.woff2') format('woff2'),
+       url('../assets/fonts/outrun_future-webfont.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+$display-font: outrun_future, 'Permanent Marker', cursive;
 
 /* LAYOUT */
 $header-height: 40px; 
@@ -97,17 +106,20 @@ nav {
     padding: 0 25px; 
   }
 
-  a {
-    color: $purple; /* or magenta */
-    &:visited {
-      color: $purple;
-    }
+  i {
+    color: $cyan; 
+    font-size: 30px;
+    margin-top: 18px;
   }
 }
 
 .menu-hover {
   color: $cyan;
-  cursor: pointer;
+  
+  h3 {
+    font-family: $display-font;
+    cursor: pointer;
+  }
   
   .menu-dropdown {
     position: absolute;
@@ -414,10 +426,20 @@ input[type=range]:focus {
   @include flex(center, flex-end, column); 
 }
 
-footer > small {
-  background-color: $dark-gray;
-  padding: 9px 10px;
-  box-shadow: 0 0 3px $yellow;
+footer {
+  position: sticky;
+  bottom: 0;
+
+  & > small {
+    background-color: $dark-gray;
+    padding: 9px 10px;
+    box-shadow: 0 0 3px $yellow;
+  }
+}
+
+small > a {
+  font-weight: 400;
+  color: $cyan;
 }
 
 #loader-modal-screen {

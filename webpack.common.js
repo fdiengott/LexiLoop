@@ -76,6 +76,14 @@ module.exports = {
           "postcss-loader",
         ],
       },
+      {
+        test: /\.(woff|woff2|eot|ttf)$/, 
+        use: [
+          {
+            loader: 'url-loader?limit=100000' 
+          }
+        ]
+      }
     ],
   },
   plugins: [
